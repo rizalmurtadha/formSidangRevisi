@@ -1,0 +1,2 @@
+web gunicorn beritaAcara:app
+

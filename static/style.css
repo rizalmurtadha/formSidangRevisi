@@ -1,0 +1,50 @@
+table, tr, th, td {
+    text-align:center; 
+    vertical-align : middle;
+    /* border: 1px solid black; */
+    /* border-collapse: collapse; */
+}
+#separate{
+    text-align:left;
+}
+#table tr th{
+    vertical-align : middle;
+}
+#LIA{
+    background-color: white;
+    border-style: none;
+    color: black;
+}
+#logo{
+    align-items: center;
+    text-align: center;
+}
+#fakultas {
+    text-align: center;
+    align-items: center;
+    vertical-align: middle;
+}
+.Label-Index{
+    background-color: white;
+    border-style: none;
+    color: black;
+    text-align:center; 
+}
+#hitung{
+    /* padding: */
+    margin: 0px 5px;
+    text-align: center;
+    align-items: center;
+    vertical-align: middle;
+}
+.no-border {
+    border: 0;
+    box-shadow: none; /* You may want to include this as bootstrap applies these styles too */
+}
+#RVS {
+    min-height: 130px;
+    min-width: max-content;
+}
+.bg-spc{
+    background-color: #EEECE0;
+}
