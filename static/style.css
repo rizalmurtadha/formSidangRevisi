@@ -1,3 +1,58 @@
+/* Header */
+.kop h4{
+    font-size: 18px;
+}
+.kop h5{
+    font-size: 16px;
+}
+#table-kop td {
+    text-align:left; 
+    vertical-align : middle;
+}
+#table-mahasiswa th {
+    text-align:left; 
+    vertical-align : middle;
+}
+
+
+.Label-Index{
+    background-color: white;
+    border-style: none;
+    color: black;
+    text-align:center; 
+}
+/* untuk print */
+/* #table{
+    font-size: 14px;
+}
+#table input, #table select{
+    height: 20px;
+    padding: 0px;
+}
+#table tr th, #table tr td{
+    height: 30px;
+    padding: 0px ;
+}
+#table {
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+
+#table th, #table td {
+    border: 1px solid black;
+}
+.Label-Index{
+    background-color: white;
+    border-style: none;
+    color: black;
+    text-align:center;
+    height: 15px;
+    padding: 0px;
+    margin: 0%;
+} */
+
+
+
 table, tr, th, td {
     text-align:center; 
     vertical-align : middle;
@@ -7,6 +62,14 @@ table, tr, th, td {
 #separate{
     text-align:left;
 }
+#Table-border {
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+  
+#Content-border th, #Content-border td {
+    border: 1px solid black;
+}
 #table tr th{
     vertical-align : middle;
 }
@@ -15,6 +78,7 @@ table, tr, th, td {
     border-style: none;
     color: black;
 }
+
 #logo{
     align-items: center;
     text-align: center;
@@ -24,12 +88,7 @@ table, tr, th, td {
     align-items: center;
     vertical-align: middle;
 }
-.Label-Index{
-    background-color: white;
-    border-style: none;
-    color: black;
-    text-align:center; 
-}
+
 #hitung{
     /* padding: */
     margin: 0px 5px;

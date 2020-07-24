@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Berita Acara Sidang</title>
+        <title>Berita Acara Sidang Tugas Akhir</title>
         {% if(cetak=="0"): %}
         <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}" >
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}">   
@@ -12,11 +12,11 @@
     </head>
     <body onload="myFunction()">
         <!-- <h1>cetak = {{cetak}}</h1> -->
-        <div class="container-fluid shadow-sm">
+        <!-- <div class="container-fluid shadow-sm">
             <br>
             <div class="row">
                 <div id="logo" class="col-6 align-middle">
-                    <!-- <img  src="{{ url_for('static', filename='logo3.png')}}" height="70" alt="Card image cap"> -->
+                    <img  src="{{ url_for('static', filename='logo3.png')}}" height="70" alt="Card image cap">
                     <img  src="data:image/png;base64,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" height="70" alt="Card image cap">
                 </div>
                 <div id="fakultas" class="col-6 align-middle">
@@ -24,41 +24,108 @@
                   <h3>Universitas Telkom</h3>
                 </div>
             </div>
+        </div> -->
+        <div class="container kop">
+            <table style="width: 100%;" id="Table-border">
+                <tbody id="table-kop">
+                    <tr id="Content-border">
+                        <th rowspan="6" style="width: 15%;">Logo</th>
+                        <th rowspan="2" style="width: 45%;"><h4><b>FAKULTAS INFORMATIKA <br>UNIVERSITAS TELKOM</b></h4></th>
+                        <td rowspan="2" style="width: 15%;">&nbsp;No. Dokumen</td>
+                        <td rowspan="2">&nbsp;Tel_U-FAK-FIF-DI-PM-003</td>
+                    </tr>
+                    <tr id="Content-border">
+                        
+                    </tr>
+                    <tr id="Content-border">
+                        <th><h4><b>Jl. Telekomunikasi No. 1, Dayeuh Kolot, Kab. <br>Bandung 40257</b></h4></th>
+                        <td rowspan="2">&nbsp;No. Revisi</td>
+                        <td rowspan="2">&nbsp;03</td>
+                    </tr>
+                    <tr id="Content-border">
+                    </tr>
+                    <tr id="Content-border">
+                        <th rowspan="2"><h4><b>BERITA ACARA SIDANG TUGAS AKHIR</b></h4></th>
+                        <td>&nbsp;Berlaku Efektif</td>
+                        <td>&nbsp;04 Januari 2018</td>
+                    </tr>
+                    <tr id="Content-border">
+                        <td>&nbsp;Halaman</td>
+                        <td>&nbsp;1 dari 1</td>
+                    </tr>
+
+                </tbody>
+            </table>
         </div>
-        <br><br>
+        <br>
+        <div class="container d-flex justify-content-center" style="width: 90%;">
         <div class="container shadow-sm">
-            <h2 style="text-align: center;">Berita Acara Sidang</h2>
-            <p class="d-flex justify-content-end">{{date}}</p><br>
-            <form action="{{ url_for('index') }}" method="POST" enctype=multipart/form-data >
-            <table style="width: 100%;" id="Identitas">
+            <h3 style="text-align: center; font-size: 12;"><b>BERITA ACARA SIDANG TUGAS AKHIR</b></h3><br>
+            <h5>Pada hari ini, tanggal &nbsp;&nbsp;   <b>{{date}}</b>  &nbsp;&nbsp;  pukul ................ {{time}} di ruangan ..................... telah dilaksanakan sidang TA <b>mahasiswa Program Sarjana di Fakultas Informatika</b> sebagai berikut:</h5>
+            <!-- <p class="d-flex justify-content-end">{{date}}</p><br> -->
+            <form action="{{ url_for('index') }}" id="my-form" method="POST" enctype=multipart/form-data >
+            <table style="width: 100%;" id="table-mahasiswa">
                 <tbody>
-                    <tr >
-                        <th style="width: 20%;">NIM</th>
-                        <td >
+                    <tr id="Content-border">
+                        <th style="width: 20%;">&nbsp; NIM</th>
+                        <td id="Content-border">
                             <input type="text" class="form-control" name="NIM" id="NIM" value="{{NIM}}">
                         </td>
                     </tr>
-                    <tr>
-                        <th >Nama Mahasiswa</th>
-                        <td >
+                    <tr id="Content-border">
+                        <th >&nbsp; Nama Mahasiswa</th>
+                        <td id="Content-border">
                             <input type="text" class="form-control" name="MHS" id="MHS" value="{{MHS}}">
                         </td>
                     </tr>
-                    <tr >
-                        <th class="JTA" id="Judul">Judul TA</th>
-                        <td >
+                    <tr id="Content-border">
+                        <th class="JTA" id="Judul">&nbsp; Judul TA</th>
+                        <td id="Content-border">
                             <textarea  class="form-control" rows="2" name="JTA" id="JTA" >{{JTA}}</textarea>
                         </td>
                     </tr>
                 </tbody>
             </table>
             <br>
+            <h5>Dewan penguji dengan penuh rasa tanggung jawab memutuskan bahwa mahasiswa tersebut di atas dinyatakan:</h5>
+            <div class="container d-flex justify-content-center" style="width: 20%;">
+                {% if(cetak=="1"): %}
+                    <label class="Label-Index" name="KL" id="KL"  size="3" >{{KL}}</label>
+                {% else: %}
+                <select class="custom-select" name="KL"id="KL">
+                    <option value="" selected></option>
+                    <option value="Lulus"  ><b>Lulus</b></option>
+                    <option value="Lulus Bersyarat" ><b>Lulus Bersyarat</b></option>
+                    <option value="Tidak Lulus"  ><b>Tidak Lulus</b></option>
+                </select>
+                {% endif %}
+            </div>
+            <h5>Dengan nilai akhir:</h5>
+            <div  class="container d-flex justify-content-center" style="width: 10%;" >
+                {% if(cetak=="1"): %}
+                    <label class="Label-Index" name="IA" id="IA"  size="3" >{{IA}}</label>
+                {% else: %}
+                <select class="custom-select" name="IA"id="IA">
+                    <option value="" selected></option>
+                    <option value="A"  >A</option>
+                    <option value="AB" >AB</option>
+                    <option value="B"  >B</option>
+                    <option value="BC" >BC</option>
+                    <option value="C"  >C</option>
+                    <option value="D"  >D</option>
+                    <option value="E"  >E</option>
+                </select>
+                {% endif %}
+            </div>
+            <br>
+            <h5>dan <b>batas akhir revisi</b> adalah sampai dengan <b>tanggal</b>:&nbsp; {{dead_rev}}</h5>
             <table class="table" id="table">
                 <thead>
                     <tr>
                         <th rowspan="2" >No.</th>
                         <th rowspan="2">Posisi</th>
                         <th rowspan="2">Nama</th>
+                        <th rowspan="2">Tanda Tangan</th>
                         <th colspan="3">Nilai<br>
                             <small>[A, AB, B, BC, C, D, E]</small>
                         </th>
@@ -71,50 +138,63 @@
                 </thead>
                 <tbody>   
                     <tr>
-                        <th>1</th>
+                        <th >1</th>
                         <td>Pembimbing 1</td>
-                        <td>
+                        <td> 
                             {% if(message=="success"): %}
-                            <input type="text" class="form-control no-border" name="Pb1" id="Pb1"  value="{{Pb1}}"  >
+                            <input type="text" class="form-control no-border" name="Pb1" id="Pb1"  value="{{Pb1}}">
                             {% else: %}
                             <input type="text" class="form-control " name="Pb1" id="Pb1"  value="{{Pb1}}"  >
                             {% endif %}
                         </td>
+                        <td></td>
                         <td>
-                            <select class="custom-select" name="DPb11"id="DPb11" required>
-                                <option value="" selected></option>
-                                <option value="A"  >A</option>
-                                <option value="AB" >AB</option>
-                                <option value="B"  >B</option>
-                                <option value="BC" >BC</option>
-                                <option value="C"  >C</option>
-                                <option value="D"  >D</option>
-                                <option value="E"  >E</option>
-                            </select>
+                            {% if(cetak=="1"): %}
+                                <label class="Label-Index" name="DPb11" id="DPb11"  size="3" >{{DPb11}}</label>
+                            {% else: %}
+                                <select class="custom-select" name="DPb11"id="DPb11" required>
+                                    <option value="" selected></option>
+                                    <option value="A"  >A</option>
+                                    <option value="AB" >AB</option>
+                                    <option value="B"  >B</option>
+                                    <option value="BC" >BC</option>
+                                    <option value="C"  >C</option>
+                                    <option value="D"  >D</option>
+                                    <option value="E"  >E</option>
+                                </select>
+                            {% endif %}
                         </td>
                         <td>
-                            <select class="custom-select" name="DPb12"id="DPb12" required >
-                                <option value="" selected></option>
-                                <option value="A"  >A</option>
-                                <option value="AB" >AB</option>
-                                <option value="B"  >B</option>
-                                <option value="BC" >BC</option>
-                                <option value="C"  >C</option>
-                                <option value="D"  >D</option>
-                                <option value="E"  >E</option>
-                            </select>
+                            {% if(cetak=="1"): %}
+                                <label class="Label-Index" name="DPb12" id="DPb12"  size="3" >{{DPb12}}</label>
+                            {% else: %}
+                                <select class="custom-select" name="DPb12"id="DPb12" required >
+                                    <option value="" selected></option>
+                                    <option value="A"  >A</option>
+                                    <option value="AB" >AB</option>
+                                    <option value="B"  >B</option>
+                                    <option value="BC" >BC</option>
+                                    <option value="C"  >C</option>
+                                    <option value="D"  >D</option>
+                                    <option value="E"  >E</option>
+                                </select>
+                            {% endif %}
                         </td>
                         <td>
-                            <select class="custom-select" name="DPb13"id="DPb13" required>
-                                <option value="" selected></option>
-                                <option value="A"  >A</option>
-                                <option value="AB" >AB</option>
-                                <option value="B"  >B</option>
-                                <option value="BC" >BC</option>
-                                <option value="C"  >C</option>
-                                <option value="D"  >D</option>
-                                <option value="E"  >E</option>
-                            </select>
+                            {% if(cetak=="1"): %}
+                                <label class="Label-Index" name="DPb13" id="DPb13"  size="3" >{{DPb13}}</label>
+                            {% else: %}
+                                <select class="custom-select" name="DPb13"id="DPb13" required>
+                                    <option value="" selected></option>
+                                    <option value="A"  >A</option>
+                                    <option value="AB" >AB</option>
+                                    <option value="B"  >B</option>
+                                    <option value="BC" >BC</option>
+                                    <option value="C"  >C</option>
+                                    <option value="D"  >D</option>
+                                    <option value="E"  >E</option>
+                                </select>
+                            {% endif %}
                         </td>
                     </tr>
                     <tr>
@@ -127,45 +207,58 @@
                             <input type="text" class="form-control " name="Pb2" id="Pb2" value="{{Pb2}}"  >
                             {% endif %}                            
                         </td>
+                        <td></td>
                         <td>
-                            <select class="custom-select" name="DPb21"id="DPb21" >
-                                <option value="" selected></option>
-                                <option value="A"  >A</option>
-                                <option value="AB" >AB</option>
-                                <option value="B"  >B</option>
-                                <option value="BC" >BC</option>
-                                <option value="C"  >C</option>
-                                <option value="D"  >D</option>
-                                <option value="E"  >E</option>
-                            </select>
+                            {% if(cetak=="1"): %}
+                                <label class="Label-Index" name="DPb21" id="DPb21"  size="3" >{{DPb21}}</label>
+                            {% else: %}
+                                <select class="custom-select" name="DPb21"id="DPb21" >
+                                    <option value="" selected></option>
+                                    <option value="A"  >A</option>
+                                    <option value="AB" >AB</option>
+                                    <option value="B"  >B</option>
+                                    <option value="BC" >BC</option>
+                                    <option value="C"  >C</option>
+                                    <option value="D"  >D</option>
+                                    <option value="E"  >E</option>
+                                </select>
+                            {% endif %}
                         </td>
                         <td>
-                            <select class="custom-select" name="DPb22"id="DPb22" >
-                                <option value="" selected></option>
-                                <option value="A"  >A</option>
-                                <option value="AB" >AB</option>
-                                <option value="B"  >B</option>
-                                <option value="BC" >BC</option>
-                                <option value="C"  >C</option>
-                                <option value="D"  >D</option>
-                                <option value="E"  >E</option>
-                            </select>
+                            {% if(cetak=="1"): %}
+                                <label class="Label-Index" name="DPb22" id="DPb22"  size="3" >{{DPb22}}</label>
+                            {% else: %}
+                                <select class="custom-select" name="DPb22"id="DPb22" >
+                                    <option value="" selected></option>
+                                    <option value="A"  >A</option>
+                                    <option value="AB" >AB</option>
+                                    <option value="B"  >B</option>
+                                    <option value="BC" >BC</option>
+                                    <option value="C"  >C</option>
+                                    <option value="D"  >D</option>
+                                    <option value="E"  >E</option>
+                                </select>
+                            {% endif %}
                         </td>
                         <td>
-                            <select class="custom-select" name="DPb23"id="DPb23" >
-                                <option value="" selected></option>
-                                <option value="A"  >A</option>
-                                <option value="AB" >AB</option>
-                                <option value="B"  >B</option>
-                                <option value="BC" >BC</option>
-                                <option value="C"  >C</option>
-                                <option value="D"  >D</option>
-                                <option value="E"  >E</option>
-                            </select>
+                            {% if(cetak=="1"): %}
+                                <label class="Label-Index" name="DPb23" id="DPb23"  size="3" >{{DPb23}}</label>
+                            {% else: %}
+                                <select class="custom-select" name="DPb23"id="DPb23" >
+                                    <option value="" selected></option>
+                                    <option value="A"  >A</option>
+                                    <option value="AB" >AB</option>
+                                    <option value="B"  >B</option>
+                                    <option value="BC" >BC</option>
+                                    <option value="C"  >C</option>
+                                    <option value="D"  >D</option>
+                                    <option value="E"  >E</option>
+                                </select>
+                            {% endif %}
                         </td>
                     </tr>
                     <tr>
-                        <th id="separate" colspan="3">Rata-rata pembimbing (Ra)</th>
+                        <th id="separate" colspan="4">&nbsp; Rata-rata pembimbing (Ra)</th>
                         <td>
                             <label class="Label-Index" name="LPb1" id="LPb1"  size="3" >{{LPb1}}</label>
                         </td>
@@ -186,41 +279,54 @@
                             <input type="text" class="form-control " name="Pg1" id="Pg1" value="{{Pg1}}"  >
                             {% endif %}
                         </td>
+                        <td></td>
                         <td>
-                            <select class="custom-select" name="DPg11"id="DPg11" required>
-                                <option value="" selected></option>
-                                <option value="A"  >A</option>
-                                <option value="AB" >AB</option>
-                                <option value="B"  >B</option>
-                                <option value="BC" >BC</option>
-                                <option value="C"  >C</option>
-                                <option value="D"  >D</option>
-                                <option value="E"  >E</option>
-                            </select>
+                            {% if(cetak=="1"): %}
+                                <label class="Label-Index" name="DPg11" id="DPg11"  size="3" >{{DPg11}}</label>
+                            {% else: %}
+                                <select class="custom-select" name="DPg11"id="DPg11" required>
+                                    <option value="" selected></option>
+                                    <option value="A"  >A</option>
+                                    <option value="AB" >AB</option>
+                                    <option value="B"  >B</option>
+                                    <option value="BC" >BC</option>
+                                    <option value="C"  >C</option>
+                                    <option value="D"  >D</option>
+                                    <option value="E"  >E</option>
+                                </select>
+                            {% endif %}
                         </td>
                         <td>
-                            <select class="custom-select" name="DPg12"id="DPg12" required>
-                                <option value="" selected></option>
-                                <option value="A"  >A</option>
-                                <option value="AB" >AB</option>
-                                <option value="B"  >B</option>
-                                <option value="BC" >BC</option>
-                                <option value="C"  >C</option>
-                                <option value="D"  >D</option>
-                                <option value="E"  >E</option>
-                            </select>
+                            {% if(cetak=="1"): %}
+                                <label class="Label-Index" name="DPg12" id="DPg12"  size="3" >{{DPg12}}</label>
+                            {% else: %}
+                                <select class="custom-select" name="DPg12"id="DPg12" required>
+                                    <option value="" selected></option>
+                                    <option value="A"  >A</option>
+                                    <option value="AB" >AB</option>
+                                    <option value="B"  >B</option>
+                                    <option value="BC" >BC</option>
+                                    <option value="C"  >C</option>
+                                    <option value="D"  >D</option>
+                                    <option value="E"  >E</option>
+                                </select>
+                            {% endif %}
                         </td>
                         <td>
-                            <select class="custom-select" name="DPg13"id="DPg13" required>
-                                <option value="" selected></option>
-                                <option value="A"  >A</option>
-                                <option value="AB" >AB</option>
-                                <option value="B"  >B</option>
-                                <option value="BC" >BC</option>
-                                <option value="C"  >C</option>
-                                <option value="D"  >D</option>
-                                <option value="E"  >E</option>
-                            </select>
+                            {% if(cetak=="1"): %}
+                                <label class="Label-Index" name="DPg13" id="DPg13"  size="3" >{{DPg13}}</label>
+                            {% else: %}
+                                <select class="custom-select" name="DPg13"id="DPg13" required>
+                                    <option value="" selected></option>
+                                    <option value="A"  >A</option>
+                                    <option value="AB" >AB</option>
+                                    <option value="B"  >B</option>
+                                    <option value="BC" >BC</option>
+                                    <option value="C"  >C</option>
+                                    <option value="D"  >D</option>
+                                    <option value="E"  >E</option>
+                                </select>
+                            {% endif %}
                         </td>
                     </tr>
                     <tr>
@@ -233,7 +339,11 @@
                             <input type="text" class="form-control " name="Pg2" id="Pg2"  value="{{Pg2}}"  >
                             {% endif %}
                         </td>
+                        <td></td>
                         <td>
+                            {% if(cetak=="1"): %}
+                                <label class="Label-Index" name="DPg21" id="DPg21"  size="3" >{{DPg21}}</label>
+                            {% else: %}
                             <select class="custom-select" name="DPg21"id="DPg21" required>
                                 <option value="" selected></option>
                                 <option value="A"  >A</option>
@@ -244,8 +354,12 @@
                                 <option value="D"  >D</option>
                                 <option value="E"  >E</option>
                             </select>
+                            {% endif %}
                         </td>
                         <td>
+                            {% if(cetak=="1"): %}
+                                <label class="Label-Index" name="DPg22" id="DPg22"  size="3" >{{DPg22}}</label>
+                            {% else: %}
                             <select class="custom-select" name="DPg22"id="DPg22" required>
                                 <option value="" selected></option>
                                 <option value="A"  >A</option>
@@ -256,8 +370,12 @@
                                 <option value="D"  >D</option>
                                 <option value="E"  >E</option>
                             </select>
+                            {% endif %}
                         </td>
                         <td>
+                            {% if(cetak=="1"): %}
+                                <label class="Label-Index" name="DPg23" id="DPg23"  size="3" >{{DPg23}}</label>
+                            {% else: %}
                             <select class="custom-select" name="DPg23"id="DPg23" required>
                                 <option value="" selected></option>
                                 <option value="A"  >A</option>
@@ -268,10 +386,11 @@
                                 <option value="D"  >D</option>
                                 <option value="E"  >E</option>
                             </select>
+                            {% endif %}
                         </td>
                     </tr>
                     <tr>
-                        <th id="separate" colspan="3">Rata-rata penguji (Rb)</th>
+                        <th id="separate" colspan="4">&nbsp; Rata-rata penguji (Rb)</th>
                         <td>
                             <label class="Label-Index" name="LPg1" id="LPg1"  size="3" >{{LPg1}}</label>
                         </td>
@@ -283,7 +402,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th id="separate" colspan="3">Nilai hasil perhitungan (60%*Ra + 40%*Rb)</th>
+                        <th id="separate" colspan="4">&nbsp; Nilai hasil perhitungan (60%*Ra + 40%*Rb)</th>
                         <td>
                             <label class="Label-Index" name="LNP1" id="LNP1"  size="3" >{{LNP1}}</label>
                         </td>
@@ -295,7 +414,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th id="separate" colspan="3">Nilai akhir</th>
+                        <th id="separate" colspan="4">&nbsp; Nilai akhir</th>
                         <td>
                             <label class="Label-Index" name="LNA1" id="LNA1"  size="3" >{{LNA1}}</label>
                         </td>
@@ -308,14 +427,14 @@
                     </tr>
                 </tbody>
             </table>
-            <br><br>
+            <br>
             <div class="row">
-                <div class="col-7">
+                <div class="col-8">
                     <h5>Nilai Tugas Akhir</h5>
-                    <h5>(CLO1 x 35%) + (CLO2 x 30%) + (CLO3 x 35%) = <label  id="LIA" name="LIA" size="3">{{INA}}</label></h5>
+                    <h5>(CLO1 x 35%) + (CLO2 x 30%) + (CLO3 x 35%) = <label  id="INA" name="INA" size="3">{{INA}}</label></h5>
                     <h5>Indeks Tugas Akhir = {{LIA}}</h5>
                 </div>
-                <div class="col-5 align-self-center d-flex justify-content-center">
+                <div class="col-4 align-self-center d-flex justify-content-center">
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
                             {% if(cetak=="0"):%}
@@ -325,7 +444,9 @@
                                     <button type="submit" class="btn btn-outline-primary btn-lg" id="hitung" name="hitung" value=0>Reset</button>
                                 {% endif %}
                                 <button type="submit" class="btn btn-outline-primary btn-lg" id="hitung" name="hitung" value=1>Hitung</button>
-                            {% endif %}
+                                <button type="submit" class="btn btn-outline-primary btn-lg" id="cetak" name="cetak" value="1" >Cetak</button>
+                                <!-- <button type="submit" class="btn btn-outline-primary btn-lg" id="cetak" name="cetak" value="1" formnovalidate>Cetak</button> -->
+                                {% endif %}
                         </div>
                         <div class="col-12 d-flex justify-content-center">
                             {% if(message=="error"): %}
@@ -336,16 +457,17 @@
                 </div>
             </div>
             <br><br>
-            <div class="row">
+            <!-- <br><br><br><br> -->
+            <!-- <div class="row">
                 <div class="col-2">
                     <b>Catatan Revisi:</b>
                 </div>
                 <div class="col-10">
-                    <textarea id="RVS" name="RVS" rows="10" style="width:100%;">{{RVS}}</textarea>
+                    <textarea id="RVS" name="RVS" rows="10" style="width:100%;">Catatan Revisi {{RVS}}</textarea>
                 </div>
-            </div>
+            </div> -->
             <br>
-            {% if(cetak=="0"):%}
+            <!-- {% if(cetak=="0"):%}
                 {% if(message=="success"): %}
                 <div class="d-flex justify-content-center">
                     <input type="hidden" name="hitung" value="1">
@@ -356,13 +478,112 @@
                     <input type="hidden" class="" id="cetak" name="cetak" value="0">
                 </div>
                 {% endif %}
-            {% endif %}
+            {% endif %} -->
+            {% if(cetak=="1"): %}
             <br><br><br>
-            <small>Created by: Rizal and IKN</small>
             <br><br>
-        </form>
+            {% endif %}
+            
         </div>
         <br>
+        </div>
+        <div class="container kop">
+            <table style="width: 100%;" id="Table-border">
+                <tbody id="table-kop">
+                    <tr id="Content-border">
+                        <th rowspan="6" style="width: 15%;">Logo</th>
+                        <th rowspan="2" style="width: 45%;"><h4><b>FAKULTAS INFORMATIKA <br>UNIVERSITAS TELKOM</b></h4></th>
+                        <td rowspan="2" style="width: 15%;">&nbsp;No. Dokumen</td>
+                        <td rowspan="2">&nbsp;Tel_U-FAK-FIF-DI-PM-003</td>
+                    </tr>
+                    <tr id="Content-border">
+                        
+                    </tr>
+                    <tr id="Content-border">
+                        <th><h4><b>Jl. Telekomunikasi No. 1, Dayeuh Kolot, Kab. <br>Bandung 40257</b></h4></th>
+                        <td rowspan="2">&nbsp;No. Revisi</td>
+                        <td rowspan="2">&nbsp;03</td>
+                    </tr>
+                    <tr id="Content-border">
+                    </tr>
+                    <tr id="Content-border">
+                        <th rowspan="2"><h4><b>LEMBAR REVISI TUGAS AKHIR</b></h4></th>
+                        <td>&nbsp;Berlaku Efektif</td>
+                        <td>&nbsp;04 Januari 2018</td>
+                    </tr>
+                    <tr id="Content-border">
+                        <td>&nbsp;Halaman</td>
+                        <td>&nbsp;1 dari 1</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <div class="container d-flex justify-content-center" style="width: 90%;">
+            <div class="container shadow-sm">
+            <h3 style="text-align: center; font-size: 12;"><b>LEMBAR REVISI TUGAS AKHIR</b></h3><br>
+            <h5><b>Tanggal sidang: {{date}}</b></h5>
+            <table style="width: 100%;" id="table-mahasiswa">
+                <tbody>
+                    <tr id="Content-border">
+                        <th style="width: 20%;">&nbsp; NIM</th>
+                        <td id="Content-border">
+                            <input type="text" class="form-control" name="NIM" id="NIM" value="{{NIM}}">
+                        </td>
+                    </tr>
+                    <tr id="Content-border">
+                        <th >&nbsp; Nama Mahasiswa</th>
+                        <td id="Content-border">
+                            <input type="text" class="form-control" name="MHS" id="MHS" value="{{MHS}}">
+                        </td>
+                    </tr>
+                    <tr id="Content-border">
+                        <th class="JTA" id="Judul">&nbsp; Judul TA</th>
+                        <td id="Content-border">
+                            <textarea  class="form-control" rows="2" name="JTA" id="JTA" >{{JTA}}</textarea>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <h5><b>Batas akhir revisi: {{dead_rev}}</b></h5>
+            <p>(Maksimal revisi hingga 15 (lima belas) hari kalender. Jika lebih dari 15 (lima belas) hari maka indeks nilai TA turun menjadi satu tinkat dari nilai indeks hasil keputusan sidang TA. Jika lebih dari 30 (tiga puluh) hari maka sidang ulang)</p>
+            <br>
+            <h5><b>Catatan Revisi:</b></h5>
+            <textarea id="RVS" name="RVS" rows="10" style="width:100%;">{{RVS}}</textarea>
+            <br><br><br><br><br><br>
+            <table style="width: 100%;" id="Table-border">
+                <tr>
+                    <th><h5><b>Menyetujui untuk direvisi</b></h5></th>
+                    <th><h5><b>Menyetujui hasil direvisi</b></h5></th>
+                </tr>
+                <tr>
+                    <td>Bandung,____________</td>
+                    <td>Bandung,____________</td>
+                </tr>
+                <tr>
+                    <td ><h1>&nbsp;</h1></td>
+                    <td ><h1>&nbsp;</h1></td>
+                </tr>
+                <tr>
+                    <td>{{Pb1}}</td>
+                    <td>{{Pb1}}</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td></td>
+                </tr>
+            </table>
+            </form>
+            {% if(cetak!="1"): %}
+            <br><br>
+            <small>Created by: Rizal and IKN</small>
+            <br><br>
+            {% endif %}
+            
+            </div> 
+        </div>
     
     <script type="text/javascript">
         function myFunction() {
@@ -380,9 +601,44 @@
             document.getElementById('DPg21').value = '{{ DPg21 }}';
             document.getElementById('DPg22').value = '{{ DPg22 }}';
             document.getElementById('DPg23').value = '{{ DPg23 }}';
+
+            document.getElementById('KL').value = '{{ KL }}';
+            document.getElementById('IA').value = '{{ IA }}';
         }
         
     </script>
+    {% if(cetak=="1"): %}
+    <style>
+        /* font size untuk print */
+        #table{
+            font-size: 14px;
+        }
+        #table input, #table select{
+            height: 20px;
+            padding: 0px;
+        }
+        #table tr th, #table tr td{
+            height: 30px;
+            padding: 0px ;
+        }
+        #table {
+            border-collapse: collapse;
+            border: 1px solid black;
+        }
+        
+        #table th, #table td {
+            border: 1px solid black;
+        }
+        .Label-Index{
+            background-color: white;
+            border-style: none;
+            color: black;
+            text-align:center;
+            height: 5px;
+            padding: 0px;
+        }
+    </style>
+    {% endif %}
 
 </body>
 </html>
