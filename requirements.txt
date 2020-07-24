@@ -19,6 +19,8 @@ Werkzeug==0.16.0
 python-csv
 pandas
 numpy
-pdfkit
+pdfkit==0.6.1
 python-pdf
 statsmodels
+PyPDF2==1.26.0
+xhtml2pdf==0.2.4
