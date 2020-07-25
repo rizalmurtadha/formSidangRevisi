@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}" >
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}">   
+</head>
+<body>
+    <div class="container" id="header" style="height: 200px;">
+        <h1> Header </h1>
+    </div>
+    <br><br>
+    <div class="container d-flex justify-content-center" id="form-home">
+        <form action="{{ url_for('index') }}" id="my-form" method="POST" enctype=multipart/form-data>
+            <h5>Silahkan isi NIM Mahasiswa</h5>
+            <input type="text" class="form-control" name="NIM" id="NIM" >
+            <br>
+            <div class="d-flex justify-content-center">
+                <!-- <button type="submit" class="btn btn-outline-primary btn-lg" id="cari" name="cari" value="1">Cari</button> -->
+                <a href="#" class="btn btn-outline-primary btn-lg">Cari</a>
+                &nbsp;  &nbsp;
+                <button type="submit" class="btn btn-outline-primary btn-lg" id="cari" name="cari" value="0">Skip</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

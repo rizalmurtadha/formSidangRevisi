@@ -4,8 +4,10 @@ import pandas as pd
 import numpy as np
 import csv
 import pdfkit
-from datetime import date
-import datetime
+import datetime as dtm
+from datetime import date,datetime
+
+
 
 app = Flask(__name__) 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -13,34 +15,30 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 @app.route("/",methods=["GET", "POST"])
+def home():
+    return render_template("home.html")
+@app.route("/form-sidang",methods=["GET", "POST"])
 def index():
     today = date.today()
-    dead_rev = today + datetime.timedelta(days=15)
+    dead_rev = today + dtm.timedelta(days=15)
     today = "{:%d-%b-%Y}".format(today)
     dead_rev = "{:%d-%b-%Y}".format(dead_rev)
+    now = datetime.now()
+    current_time = now.strftime("%H:%M")
     cetak = "0"
     if request.method=="POST":
+        try:
+            cari = request.form['cari']
+            if (cari=="0"):
+                return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time)
+        except:
+            cari = None
+            
 
         try:
             hitung = request.form['hitung']
         except:
             hitung ="1"
-
-        # try:
-        #     cetak= request.form['cetak']
-        # except:
-        #     cetak ="0"
-
-        # if (cetak=="1"):
-        #     html = pritnPdf()
-        #     css = ["static/css/bootstrap.min.css","static/style.css"]
-        #     # config = pdfkit.configuration(wkhtmltopdf='./bin/wkhtmltopdf')
-        #     # pdf = pdfkit.from_string(html, False,configuration=config, css=css)
-        #     pdf = pdfkit.from_string(html, False, css=css)
-        #     response = make_response(pdf)
-        #     response.headers["Content-Type"] = "application/pdf"
-        #     response.headers["Content-Disposition"] = "inline; filename=NilaiSidang.pdf"
-        #     return response
 
         if (hitung =="1"):
             # return request.form['DPb13']
@@ -70,7 +68,11 @@ def index():
             KL = request.form['KL']
             IA = request.form['IA']
             RVS = request.form['RVS']
+            time = request.form['current_time']
+            ruangan = request.form['ruangan']
 
+            if(current_time!=time and time!=""):
+                current_time=time
 
             try:
                 try:
@@ -98,7 +100,7 @@ def index():
                                     KL=KL,IA=IA,
                                     Pb2=Pb2, Pg1=Pg1, Pg2=Pg2, cetak=cetak,
                                     RVS=RVS,  message="success" ,date=today,
-                                    dead_rev=dead_rev)
+                                    dead_rev=dead_rev, current_time=current_time, ruangan=ruangan)
                 # return cetak
                 if (cetak=="1"):
                     filename_pdf = "Nilai_"+MHS+".pdf"
@@ -114,74 +116,9 @@ def index():
                     return html
             except:
                 cetak="0"
-                return render_template("index.html", cetak=cetak, message="error",date=today,dead_rev=dead_rev)
+                return render_template("index.html", cetak=cetak, message="error",date=today,dead_rev=dead_rev, current_time=current_time)
 
-    return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev)
-
-
-def pritnPdf():
-    today = date.today()
-    dead_rev = today + datetime.timedelta(days=15)
-    today = "{:%d-%b-%Y}".format(today)
-    dead_rev = "{:%d-%b-%Y}".format(dead_rev)
-    cetak = "1"
-    NIM = request.form['NIM']
-    MHS = request.form['MHS']
-    JTA = request.form['JTA']
-    Pb1 = request.form['Pb1']
-    Pb2 = request.form['Pb2']
-    Pg1 = request.form['Pg1']
-    Pg2 = request.form['Pg2']
-
-    DPb11 = request.form['DPb11']
-    DPb12 = request.form['DPb12']
-    DPb13 = request.form['DPb13']
-    DPb21 = request.form['DPb21']
-    DPb22 = request.form['DPb22']
-    DPb23 = request.form['DPb23']
-
-    DPg11 = request.form['DPg11']
-    DPg12 = request.form['DPg12']
-    DPg13 = request.form['DPg13']
-    DPg21 = request.form['DPg21']
-    DPg22 = request.form['DPg22']
-    DPg23 = request.form['DPg23']
-    
-    LPb1 = request.form['LPb1']
-    LPb2 = request.form['LPb2']
-    LPb3 = request.form['LPb3']
-    LPg1 = request.form['LPg1']
-    LPg2 = request.form['LPg2']
-    LPg3 = request.form['LPg3']
-    LNP1 = request.form['LNP1']
-    LNP2 = request.form['LNP2']
-    LNP3 = request.form['LNP3']
-    LNA1 = request.form['LNA1']
-    LNA2 = request.form['LNA2']
-    LNA3 = request.form['LNA3']
-    INA = request.form['INA']
-    LIA = indexing(INA)
-
-    KL = request.form['KL']
-    IA = request.form['IA']
-    RVS = request.form['RVS']
-    html = render_template("index.html",
-                                    DPb11=DPb11, DPb12=DPb12, DPb13=DPb13,
-                                    DPb21=DPb21, DPb22=DPb22, DPb23=DPb23,
-                                    LPb1=LPb1 , LPb2=LPb2 , LPb3=LPb3 ,
-                                    DPg11=DPg11, DPg12=DPg12, DPg13=DPg13,
-                                    DPg21=DPg21, DPg22=DPg22, DPg23=DPg23,
-                                    LPg1=LPg1 , LPg2=LPg2 , LPg3=LPg3 ,
-                                    LNP1=LNP1 , LNP2=LNP2 , LNP3=LNP3 ,
-                                    LNA1=LNA1 , LNA2=LNA2 , LNA3=LNA3 ,
-                                    LIA=LIA, INA=INA, NIM=NIM,
-                                    MHS=MHS, JTA=JTA, Pb1=Pb1,
-                                    KL=KL,IA=IA,
-                                    Pb2=Pb2, Pg1=Pg1, Pg2=Pg2, cetak=cetak,
-                                    RVS=RVS,  message="success" ,date=today,
-                                    dead_rev=dead_rev)
-    return html
-
+    return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time)
 
 ind_to_val = {"A":4, "AB":3.5, "B":3, "BC":2.5, "C":2, "D":1, "E":0}
 val_to_ind = {4:"A", 3.5:"AB", 3:"B", 2.5:"BC", 2:"C", 1:"D", 0:"E"}

@@ -62,10 +62,25 @@
         <br>
         <div class="container d-flex justify-content-center" style="width: 90%;">
         <div class="container shadow-sm">
+            <form action="{{ url_for('index') }}" id="my-form" method="POST" enctype=multipart/form-data>
             <h3 style="text-align: center; font-size: 12;"><b>BERITA ACARA SIDANG TUGAS AKHIR</b></h3><br>
-            <h5>Pada hari ini, tanggal &nbsp;&nbsp;   <b>{{date}}</b>  &nbsp;&nbsp;  pukul ................ {{time}} di ruangan ..................... telah dilaksanakan sidang TA <b>mahasiswa Program Sarjana di Fakultas Informatika</b> sebagai berikut:</h5>
+            <div class="deskripsi" id="deskripsi">
+                <h5>Pada hari ini, tanggal &nbsp; <b>{{date}}</b> &nbsp; pukul &nbsp;
+                {% if cetak=="0" :%}
+                    <b><input type="text" name="current_time" id="current_time" value="{{current_time}}" style="width: 5.5%; "></b>
+                {% else:%}
+                    <b><label name="current_time" id="current_time">{{current_time}}</form></b>
+                {% endif %}
+                &nbsp; di ruangan 
+                {% if cetak=="0" :%}
+                    <input type="text" name="ruangan" id="ruangan" value="{{ruangan}}" style="width: 15%; ">
+                {% else:%}
+                    <b><label name="ruangan" id="ruangan">{{ruangan}}</form></b>
+                {% endif %}
+                telah dilaksanakan sidang TA <b>mahasiswa Program Sarjana di Fakultas Informatika</b> sebagai berikut:</h5>
+            </div>
             <!-- <p class="d-flex justify-content-end">{{date}}</p><br> -->
-            <form action="{{ url_for('index') }}" id="my-form" method="POST" enctype=multipart/form-data >
+            <!-- <form action="{{ url_for('index') }}" id="my-form" method="POST" enctype=multipart/form-data style="display:inline;"> -->
             <table style="width: 100%;" id="table-mahasiswa">
                 <tbody>
                     <tr id="Content-border">
@@ -150,7 +165,11 @@
                             <input type="text" class="form-control " name="Pb1" id="Pb1"  value="{{Pb1}}"  >
                             {% endif %}
                         </td>
-                        <td></td>
+                        <td>
+                            {% if(cetak!="1"): %}
+                            <input style="border: solid; border-radius: 1px; padding: none;" size="9" disabled>
+                            {% endif %}
+                        </td> 
                         <td>
                             {% if(cetak=="1"): %}
                                 <label class="Label-Index" name="DPb11" id="DPb11"  size="3" >{{DPb11}}</label>
@@ -210,7 +229,11 @@
                             <input type="text" class="form-control " name="Pb2" id="Pb2" value="{{Pb2}}"  >
                             {% endif %}                            
                         </td>
-                        <td></td>
+                        <td>
+                            {% if(cetak!="1"): %}
+                            <input style="border: solid; border-radius: 1px; padding: none;" size="9" disabled>
+                            {% endif %}
+                        </td>
                         <td>
                             {% if(cetak=="1"): %}
                                 <label class="Label-Index" name="DPb21" id="DPb21"  size="3" >{{DPb21}}</label>
@@ -282,7 +305,11 @@
                             <input type="text" class="form-control " name="Pg1" id="Pg1" value="{{Pg1}}"  >
                             {% endif %}
                         </td>
-                        <td></td>
+                        <td>
+                            {% if(cetak!="1"): %}
+                            <input style="border: solid; border-radius: 1px; padding: none;" size="9" disabled>
+                            {% endif %}
+                        </td>
                         <td>
                             {% if(cetak=="1"): %}
                                 <label class="Label-Index" name="DPg11" id="DPg11"  size="3" >{{DPg11}}</label>
@@ -342,7 +369,11 @@
                             <input type="text" class="form-control " name="Pg2" id="Pg2"  value="{{Pg2}}"  >
                             {% endif %}
                         </td>
-                        <td></td>
+                        <td>
+                            {% if(cetak!="1"): %}
+                            <input style="border: solid; border-radius: 1px; padding: none;" size="9" disabled>
+                            {% endif %}
+                        </td>
                         <td>
                             {% if(cetak=="1"): %}
                                 <label class="Label-Index" name="DPg21" id="DPg21"  size="3" >{{DPg21}}</label>

@@ -21,37 +21,6 @@
     color: black;
     text-align:center; 
 }
-/* untuk print */
-/* #table{
-    font-size: 14px;
-}
-#table input, #table select{
-    height: 20px;
-    padding: 0px;
-}
-#table tr th, #table tr td{
-    height: 30px;
-    padding: 0px ;
-}
-#table {
-    border-collapse: collapse;
-    border: 1px solid black;
-}
-
-#table th, #table td {
-    border: 1px solid black;
-}
-.Label-Index{
-    background-color: white;
-    border-style: none;
-    color: black;
-    text-align:center;
-    height: 15px;
-    padding: 0px;
-    margin: 0%;
-} */
-
-
 
 table, tr, th, td {
     text-align:center; 
@@ -106,4 +75,18 @@ table, tr, th, td {
 }
 .bg-spc{
     background-color: #EEECE0;
+}
+.deskripsi {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+/* home page */
+
+#header{
+    text-align: center;
+    align-items: center;
+    vertical-align: middle;
+    border-radius: 1px;
+    border: solid;
 }
