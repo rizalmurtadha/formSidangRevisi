@@ -27,7 +27,7 @@ def index():
     timeZ_Jkt = pytz.timezone('Asia/Jakarta')  
     dt_Jkt = datetime.now(timeZ_Jkt) 
     # print(dt_Jkt.strftime(' %H:%M:%S %Z %z')) 
-    current_time = dt_Jkt.strftime(' %H:%M')
+    current_time = dt_Jkt.strftime('%H:%M')
     cetak = "0"
     if request.method=="POST":
         try:
