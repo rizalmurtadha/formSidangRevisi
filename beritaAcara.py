@@ -6,7 +6,7 @@ import csv
 import pdfkit
 import datetime as dtm
 from datetime import date,datetime
-
+import pytz
 
 
 app = Flask(__name__) 
@@ -23,8 +23,11 @@ def index():
     dead_rev = today + dtm.timedelta(days=15)
     today = "{:%d-%b-%Y}".format(today)
     dead_rev = "{:%d-%b-%Y}".format(dead_rev)
-    now = datetime.now()
-    current_time = now.strftime("%H:%M")
+    UTC = pytz.utc   
+    timeZ_Jkt = pytz.timezone('Asia/Jakarta')  
+    dt_Jkt = datetime.now(timeZ_Jkt) 
+    # print(dt_Jkt.strftime(' %H:%M:%S %Z %z')) 
+    current_time = dt_Jkt.strftime(' %H:%M')
     cetak = "0"
     if request.method=="POST":
         try:
