@@ -37,6 +37,7 @@ def index():
                 return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time)
             else:
                 nim=request.form['NIM']
+                nim = int(nim)
                 dataMhs = cariMhs(nim)
                 if (dataMhs=="tidak ada"):
                     return render_template("home.html",message="tidak ada")
@@ -120,9 +121,9 @@ def index():
                 if (cetak=="1"):
                     filename_pdf = "Nilai_"+MHS+".pdf"
                     css = ["static/css/bootstrap.min.css","static/style.css"]
-                    # config = pdfkit.configuration(wkhtmltopdf='./bin/wkhtmltopdf')
-                    # pdf = pdfkit.from_string(html, False,configuration=config, css=css)
-                    pdf = pdfkit.from_string(html, False, css=css)
+                    config = pdfkit.configuration(wkhtmltopdf='./bin/wkhtmltopdf')
+                    pdf = pdfkit.from_string(html, False,configuration=config, css=css)
+                    # pdf = pdfkit.from_string(html, False, css=css)
                     response = make_response(pdf)
                     response.headers["Content-Type"] = "application/pdf"
                     response.headers["Content-Disposition"] = "inline; filename=NilaiSidang.pdf"
