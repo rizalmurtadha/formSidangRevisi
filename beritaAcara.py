@@ -126,8 +126,11 @@ def index():
                     filename_pdf = "Sidang_"+NIM+".pdf"
                     headers_filename = "inline; filename="+filename_pdf
                     css = ["static/css/bootstrap.min.css","static/style.css"]
+                    # comment config yang tidak dipilih
+                    # config for heroku
                     config = pdfkit.configuration(wkhtmltopdf='./bin/wkhtmltopdf')
                     pdf = pdfkit.from_string(html, False,configuration=config, css=css)
+                    # config for local pc
                     # pdf = pdfkit.from_string(html, False, css=css)
                     response = make_response(pdf)
                     response.headers["Content-Type"] = "application/pdf"
