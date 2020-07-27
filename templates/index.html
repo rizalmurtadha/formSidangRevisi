@@ -117,11 +117,11 @@
             </table>
             <br>
             <h5>Dewan penguji dengan penuh rasa tanggung jawab memutuskan bahwa mahasiswa tersebut di atas dinyatakan:</h5>
-            <div class="container d-flex justify-content-center" style="width: 20%;">
+            <div class="container d-flex justify-content-center">
                 {% if(cetak=="1"): %}
-                    <label class="Label-Index" name="KL" id="KL"  size="3" ><h3><b>{{KL}}</b></h3></label>
+                    <label class="Label-Index" name="KL" id="KL" style="width: 100%;" size="20" ><h3><b>{{KL}}</b></h3></label>
                 {% else: %}
-                <select class="custom-select" name="KL"id="KL">
+                <select class="custom-select" name="KL"id="KL"  style="width: 20%;">
                     <option value="" selected></option>
                     <option value="Lulus"  ><b>Lulus</b></option>
                     <option value="Lulus Bersyarat" ><b>Lulus Bersyarat</b></option>
@@ -604,7 +604,7 @@
             {% endif %}
             <br>
             <h5><b>Batas akhir revisi: {{dead_rev}}</b></h5>
-            <p>(Maksimal revisi hingga 15 (lima belas) hari kalender. Jika lebih dari 15 (lima belas) hari maka indeks nilai TA turun menjadi satu tinkat dari nilai indeks hasil keputusan sidang TA. Jika lebih dari 30 (tiga puluh) hari maka sidang ulang)</p>
+            <p>(Maksimal revisi hingga 15 (lima belas) hari kalender. Jika lebih dari 15 (lima belas) hari maka indeks nilai TA turun menjadi satu tingkat dari nilai indeks hasil keputusan sidang TA. Jika lebih dari 30 (tiga puluh) hari maka sidang ulang)</p>
             <br>
             <h5><b>Catatan Revisi:</b></h5>
             <textarea id="RVS" name="RVS" rows="10" style="width:100%;">{{RVS}}</textarea>
@@ -615,7 +615,7 @@
                     <th><h5><b>Menyetujui hasil revisi</b></h5></th>
                 </tr>
                 <tr>
-                    <td>Bandung,____________</td>
+                    <td>Bandung, {{date}}</td>
                     <td>Bandung,____________</td>
                 </tr>
                 <tr>
