@@ -1,10 +1,21 @@
 /* Header */
 .kop h4{
-    font-size: 18px;
-}
-.kop h5{
     font-size: 16px;
 }
+/* .kop td{
+    font-size: 16px;
+} */
+#table-CLO{
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+#Content-CLO td, #Content-CLO th{
+    border: 1px solid black;
+}
+#Content-CLO td{
+    text-align: left;
+}
+
 #table-kop td {
     text-align:left; 
     vertical-align : middle;
