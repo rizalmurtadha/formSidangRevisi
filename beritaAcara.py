@@ -30,6 +30,7 @@ def index():
     # print(dt_Jkt.strftime(' %H:%M:%S %Z %z')) 
     current_time = dt_Jkt.strftime('%H:%M')
     cetak = "0"
+    editable = "1"
     if request.method=="POST":
         try:
             cari = request.form['cari']
@@ -42,11 +43,12 @@ def index():
                 if (dataMhs=="tidak ada"):
                     return render_template("home.html",message="tidak ada")
                 else:
+                    editable="0"
                     return render_template("index.html", NIM=dataMhs[0], MHS=dataMhs[1],
                                             JTA=dataMhs[2], pbb1=dataMhs[3], pbb2=dataMhs[4],
                                             pgj1=dataMhs[5], pgj2=dataMhs[6], ruangan=dataMhs[7],
                                             cetak=cetak, message="normal",date=today,
-                                            dead_rev=dead_rev, current_time=current_time)
+                                            dead_rev=dead_rev, current_time=current_time,editable=editable)
         except:
             cari = None
             
@@ -116,7 +118,7 @@ def index():
                                     KL=KL,IA=IA,
                                     pbb2=pbb2, pgj1=pgj1, pgj2=pgj2, cetak=cetak,
                                     RVS=RVS,  message="success" ,date=today,
-                                    dead_rev=dead_rev, current_time=current_time, ruangan=ruangan)
+                                    dead_rev=dead_rev, current_time=current_time, ruangan=ruangan, editable=editable)
                 # return cetak
                 if (cetak=="1"):
                     filename_pdf = "Nilai_"+MHS+".pdf"
@@ -132,9 +134,9 @@ def index():
                     return html
             except:
                 cetak="0"
-                return render_template("index.html", cetak=cetak, message="error",date=today,dead_rev=dead_rev, current_time=current_time)
+                return render_template("index.html", cetak=cetak, message="error",date=today,dead_rev=dead_rev, current_time=current_time,editable=editable)
 
-    return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time)
+    return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time,editable=editable)
 
 def cariMhs(nim):
     [lec_code, schedule] = joblib.load("database.p")

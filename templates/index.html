@@ -86,19 +86,31 @@
                     <tr id="Content-border">
                         <th style="width: 30%;">&nbsp; NIM</th>
                         <td id="Content-border">
-                            <input type="text" class="form-control" name="NIM" id="NIM" value="{{NIM}}" disabled>
+                            {% if(editable=="0"): %}
+                            <input type="text" class="form-control" name="NIM" id="NIM" value="{{NIM}}" readonly="readonly">
+                            {% else: %}
+                            <input type="text" class="form-control" name="NIM" id="NIM" value="{{NIM}}" >
+                            {% endif %}
                         </td>
                     </tr>
                     <tr id="Content-border">
                         <th >&nbsp; Nama Mahasiswa</th>
                         <td id="Content-border">
-                            <input type="text" class="form-control" name="MHS" id="MHS" value="{{MHS}}" disabled>
+                            {% if(editable=="0"): %}
+                            <input type="text" class="form-control" name="MHS" id="MHS" value="{{MHS}}" readonly="readonly">
+                            {% else: %}
+                            <input type="text" class="form-control" name="MHS" id="MHS" value="{{MHS}}">
+                            {% endif %}
                         </td>
                     </tr>
                     <tr id="Content-border">
                         <th class="JTA" id="Judul">&nbsp; Judul TA</th>
                         <td id="Content-border">
-                            <textarea  class="form-control" rows="2" name="JTA" id="JTA" disabled>{{JTA}}</textarea>
+                            {% if(editable=="0"): %}
+                            <textarea  class="form-control" rows="2" name="JTA" id="JTA" readonly="readonly">{{JTA}}</textarea>
+                            {% else: %}
+                            <textarea  class="form-control" rows="2" name="JTA" id="JTA" >{{JTA}}</textarea>
+                            {% endif %}
                         </td>
                     </tr>
                 </tbody>
@@ -157,17 +169,21 @@
                 <tbody>   
                     <tr>
                         <th >1</th>
-                        <td>Pembimbing 1</td>
-                        <td> 
+                        <td style="width: 15%;">Pembimbing 1</td>
+                        {% if(cetak=="1"): %}
+                        <td style="width: 50%;">
+                        {% else : %}
+                        <td style="width: 40%;">
+                        {% endif %}
                             {% if(message=="success"): %}
                             <input type="text" class="form-control no-border" name="pbb1" id="pbb1"  value="{{pbb1}}">
                             {% else: %}
                             <input type="text" class="form-control " name="pbb1" id="pbb1"  value="{{pbb1}}"  >
                             {% endif %}
                         </td>
-                        <td>
+                        <td >
                             {% if(cetak!="1"): %}
-                            <input style="background-color: white;" class="form-control " size="7" disabled>
+                            <input style="background-color: white;" class="form-control " size="3" disabled>
                             {% endif %}
                         </td> 
                         <td>
@@ -231,7 +247,7 @@
                         </td>
                         <td>
                             {% if(cetak!="1"): %}
-                            <input style="background-color: white;" class="form-control " size="7" disabled>
+                            <input style="background-color: white;" class="form-control " size="3" disabled>
                             {% endif %}
                         </td>
                         <td>
@@ -307,7 +323,7 @@
                         </td>
                         <td>
                             {% if(cetak!="1"): %}
-                            <input style="background-color: white;" class="form-control " size="7" disabled>
+                            <input style="background-color: white;" class="form-control " size="3" disabled>
                             {% endif %}
                         </td>
                         <td>
@@ -371,7 +387,7 @@
                         </td>
                         <td>
                             {% if(cetak!="1"): %}
-                            <input style="background-color: white;" class="form-control " size="7" disabled>
+                            <input style="background-color: white;" class="form-control " size="3" disabled>
                             {% endif %}
                         </td>
                         <td>
@@ -556,9 +572,11 @@
                 </tbody>
             </table>
         </div>
+        {% endif %}
         <br>
         <div class="container d-flex justify-content-center" style="width: 90%;">
             <div class="container shadow-sm">
+            {% if (cetak=="1"): %}
             <h3 style="text-align: center; font-size: 12;"><b>LEMBAR REVISI TUGAS AKHIR</b></h3><br>
             <h5><b>Tanggal sidang: {{date}}</b></h5>
             <table style="width: 100%;" id="table-mahasiswa">
