@@ -14,6 +14,10 @@
     vertical-align : middle;
 }
 
+#table-mahasiswa input, #table-mahasiswa textarea{
+    background-color: white;
+}
+
 
 .Label-Index{
     background-color: white;

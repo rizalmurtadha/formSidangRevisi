@@ -7,6 +7,7 @@ import pdfkit
 import datetime as dtm
 from datetime import date,datetime
 import pytz
+import joblib
 
 
 app = Flask(__name__) 
@@ -34,6 +35,17 @@ def index():
             cari = request.form['cari']
             if (cari=="0"):
                 return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time)
+            else:
+                nim=request.form['NIM']
+                dataMhs = cariMhs(nim)
+                if (dataMhs=="tidak ada"):
+                    return render_template("home.html",message="tidak ada")
+                else:
+                    return render_template("index.html", NIM=dataMhs[0], MHS=dataMhs[1],
+                                            JTA=dataMhs[2], pbb1=dataMhs[3], pbb2=dataMhs[4],
+                                            pgj1=dataMhs[5], pgj2=dataMhs[6], ruangan=dataMhs[7],
+                                            cetak=cetak, message="normal",date=today,
+                                            dead_rev=dead_rev, current_time=current_time)
         except:
             cari = None
             
@@ -48,10 +60,10 @@ def index():
             NIM = request.form['NIM']
             MHS = request.form['MHS']
             JTA = request.form['JTA']
-            Pb1 = request.form['Pb1']
-            Pb2 = request.form['Pb2']
-            Pg1 = request.form['Pg1']
-            Pg2 = request.form['Pg2']
+            pbb1 = request.form['pbb1']
+            pbb2 = request.form['pbb2']
+            pgj1 = request.form['pgj1']
+            pgj2 = request.form['pgj2']
 
             DPb11 = request.form['DPb11']
             DPb12 = request.form['DPb12']
@@ -99,18 +111,18 @@ def index():
                                     LNP1=LNP[0] , LNP2=LNP[1] , LNP3=LNP[2] ,
                                     LNA1=LNA[0] , LNA2=LNA[1] , LNA3=LNA[2] ,
                                     LIA=LIA, INA=INA, NIM=NIM,
-                                    MHS=MHS, JTA=JTA, Pb1=Pb1,
+                                    MHS=MHS, JTA=JTA, pbb1=pbb1,
                                     KL=KL,IA=IA,
-                                    Pb2=Pb2, Pg1=Pg1, Pg2=Pg2, cetak=cetak,
+                                    pbb2=pbb2, pgj1=pgj1, pgj2=pgj2, cetak=cetak,
                                     RVS=RVS,  message="success" ,date=today,
                                     dead_rev=dead_rev, current_time=current_time, ruangan=ruangan)
                 # return cetak
                 if (cetak=="1"):
                     filename_pdf = "Nilai_"+MHS+".pdf"
                     css = ["static/css/bootstrap.min.css","static/style.css"]
-                    config = pdfkit.configuration(wkhtmltopdf='./bin/wkhtmltopdf')
-                    pdf = pdfkit.from_string(html, False,configuration=config, css=css)
-                    # pdf = pdfkit.from_string(html, False, css=css)
+                    # config = pdfkit.configuration(wkhtmltopdf='./bin/wkhtmltopdf')
+                    # pdf = pdfkit.from_string(html, False,configuration=config, css=css)
+                    pdf = pdfkit.from_string(html, False, css=css)
                     response = make_response(pdf)
                     response.headers["Content-Type"] = "application/pdf"
                     response.headers["Content-Disposition"] = "inline; filename=NilaiSidang.pdf"
@@ -122,6 +134,50 @@ def index():
                 return render_template("index.html", cetak=cetak, message="error",date=today,dead_rev=dead_rev, current_time=current_time)
 
     return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time)
+
+def cariMhs(nim):
+    [lec_code, schedule] = joblib.load("database.p")
+    nim_list = schedule.NIM.values.tolist()
+
+    # misal value NIM yang diisikan di-assign sebagai “nim”
+    # condition 1
+    if nim not in nim_list:
+        # muncul pop up dengan tulisan “NIM Mahasiswa tidak ditemukan di jadwal sidang” dan halaman tidak berubah
+        return "tidak ada"
+    # condition 2
+    else:
+        # filter data
+        sel_data = schedule[schedule.NIM == nim]
+        # grab nama
+        nama = sel_data["Nama"].values[0]
+        # grab judul
+        judul = sel_data["Judul"].values[0]
+        # list kode dosen
+        lec_code_list = lec_code.kode.values.tolist()
+        # grab nama pembimbing 1
+        pbb1 = sel_data["Pembimbing_1"].values[0]
+        if pbb1 in lec_code_list:
+            pbb1 = lec_code[lec_code.kode == pbb1].nama.values[0]
+        # grab nama pembimbing 2
+        pbb2 = sel_data["Pembimbing_2"].values[0]
+        if pbb2 != 0:
+            if pbb2 in lec_code_list:
+                pbb2 = lec_code[lec_code.kode == pbb2].nama.values[0]
+        else:
+            pbb2 = ""
+        # grab nama penguji 1
+        pgj1 = sel_data["Penguji_1"].values[0]
+        if pgj1 in lec_code_list:
+            pgj1 = lec_code[lec_code.kode == pgj1].nama.values[0]
+        # grab nama penguji 2
+        pgj2 = sel_data["Penguji_2"].values[0]
+        if pgj2 in lec_code_list:
+            pgj2 = lec_code[lec_code.kode == pgj2].nama.values[0]
+        # grab lokasi sidang
+        lokasi = sel_data["lokasi"].values[0]
+        # kirim variable ke halaman selanjutnya
+        return [nim, nama, judul, pbb1, pbb2, pgj1, pgj2, lokasi]
+
 
 ind_to_val = {"A":4, "AB":3.5, "B":3, "BC":2.5, "C":2, "D":1, "E":0}
 val_to_ind = {4:"A", 3.5:"AB", 3:"B", 2.5:"BC", 2:"C", 1:"D", 0:"E"}

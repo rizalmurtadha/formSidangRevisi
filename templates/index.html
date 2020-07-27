@@ -86,19 +86,19 @@
                     <tr id="Content-border">
                         <th style="width: 30%;">&nbsp; NIM</th>
                         <td id="Content-border">
-                            <input type="text" class="form-control" name="NIM" id="NIM" value="{{NIM}}">
+                            <input type="text" class="form-control" name="NIM" id="NIM" value="{{NIM}}" disabled>
                         </td>
                     </tr>
                     <tr id="Content-border">
                         <th >&nbsp; Nama Mahasiswa</th>
                         <td id="Content-border">
-                            <input type="text" class="form-control" name="MHS" id="MHS" value="{{MHS}}">
+                            <input type="text" class="form-control" name="MHS" id="MHS" value="{{MHS}}" disabled>
                         </td>
                     </tr>
                     <tr id="Content-border">
                         <th class="JTA" id="Judul">&nbsp; Judul TA</th>
                         <td id="Content-border">
-                            <textarea  class="form-control" rows="2" name="JTA" id="JTA" >{{JTA}}</textarea>
+                            <textarea  class="form-control" rows="2" name="JTA" id="JTA" disabled>{{JTA}}</textarea>
                         </td>
                     </tr>
                 </tbody>
@@ -167,7 +167,7 @@
                         </td>
                         <td>
                             {% if(cetak!="1"): %}
-                            <input style="border: solid; border-radius: 1px; padding: none;" size="9" disabled>
+                            <input style="background-color: white;" class="form-control " size="7" disabled>
                             {% endif %}
                         </td> 
                         <td>
@@ -231,7 +231,7 @@
                         </td>
                         <td>
                             {% if(cetak!="1"): %}
-                            <input style="border: solid; border-radius: 1px; padding: none;" size="9" disabled>
+                            <input style="background-color: white;" class="form-control " size="7" disabled>
                             {% endif %}
                         </td>
                         <td>
@@ -307,7 +307,7 @@
                         </td>
                         <td>
                             {% if(cetak!="1"): %}
-                            <input style="border: solid; border-radius: 1px; padding: none;" size="9" disabled>
+                            <input style="background-color: white;" class="form-control " size="7" disabled>
                             {% endif %}
                         </td>
                         <td>
@@ -371,7 +371,7 @@
                         </td>
                         <td>
                             {% if(cetak!="1"): %}
-                            <input style="border: solid; border-radius: 1px; padding: none;" size="9" disabled>
+                            <input style="background-color: white;" class="form-control " size="7" disabled>
                             {% endif %}
                         </td>
                         <td>
@@ -521,6 +521,7 @@
         </div>
         <br>
         </div>
+        {% if (cetak=="1"): %}
         <div class="container kop">
             <table style="width: 100%;" id="Table-border">
                 <tbody id="table-kop">
@@ -555,6 +556,7 @@
                 </tbody>
             </table>
         </div>
+        {% endif %}
         <br>
         <div class="container d-flex justify-content-center" style="width: 90%;">
             <div class="container shadow-sm">
