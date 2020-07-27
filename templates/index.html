@@ -573,7 +573,11 @@
                         
                     </tr>
                     <tr id="Content-border">
+                        {% if(cetak=="1"): %}
+                        <th><h4><b>Jl. Telekomunikasi No. 1, Dayeuh Kolot, Kab. Bandung 40257</b></h4></th>
+                        {% else: %}
                         <th><h4><b>Jl. Telekomunikasi No. 1, Dayeuh Kolot, Kab. <br>Bandung 40257</b></h4></th>
+                        {% endif %}
                         <td rowspan="2">&nbsp;No. Revisi</td>
                         <td rowspan="2">&nbsp;03</td>
                     </tr>
@@ -734,6 +738,9 @@
         }
         #Table-CLO{
             font-size: 14px;
+        }
+        #RVS {
+            font-size: 16px;
         }
     </style>
     {% endif %}
