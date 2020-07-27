@@ -38,6 +38,8 @@ def index():
                 return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time)
             else:
                 nim=request.form['NIM']
+                if(nim==""):
+                    return render_template("home.html",message="tidak ada")
                 nim = int(nim)
                 dataMhs = cariMhs(nim)
                 if (dataMhs=="tidak ada"):
@@ -124,9 +126,9 @@ def index():
                     filename_pdf = "Sidang_"+NIM+".pdf"
                     headers_filename = "inline; filename="+filename_pdf
                     css = ["static/css/bootstrap.min.css","static/style.css"]
-                    config = pdfkit.configuration(wkhtmltopdf='./bin/wkhtmltopdf')
-                    pdf = pdfkit.from_string(html, False,configuration=config, css=css)
-                    # pdf = pdfkit.from_string(html, False, css=css)
+                    # config = pdfkit.configuration(wkhtmltopdf='./bin/wkhtmltopdf')
+                    # pdf = pdfkit.from_string(html, False,configuration=config, css=css)
+                    pdf = pdfkit.from_string(html, False, css=css)
                     response = make_response(pdf)
                     response.headers["Content-Type"] = "application/pdf"
                     response.headers["Content-Disposition"] = headers_filename
