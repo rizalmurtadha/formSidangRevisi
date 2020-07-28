@@ -86,7 +86,7 @@ def index():
             
 
             KL = request.form['KL']
-            IA = request.form['IA']
+            # IA = request.form['IA']
             RVS = request.form['RVS']
             time = request.form['current_time']
             ruangan = request.form['ruangan']
@@ -117,7 +117,7 @@ def index():
                                     LNA1=LNA[0] , LNA2=LNA[1] , LNA3=LNA[2] ,
                                     LIA=LIA, INA=INA, NIM=NIM,
                                     MHS=MHS, JTA=JTA, pbb1=pbb1,
-                                    KL=KL,IA=IA,
+                                    KL=KL,
                                     pbb2=pbb2, pgj1=pgj1, pgj2=pgj2, cetak=cetak,
                                     RVS=RVS,  message="success" ,date=today,
                                     dead_rev=dead_rev, current_time=current_time, ruangan=ruangan, editable=editable)
@@ -126,7 +126,7 @@ def index():
                     filename_pdf = "Sidang_"+NIM+".pdf"
                     headers_filename = "inline; filename="+filename_pdf
                     css = ["static/css/bootstrap.min.css","static/style.css"]
-                    # comment config yang tidak dipilih
+                    # uncomment config yang dipilih
                     # config for heroku
                     config = pdfkit.configuration(wkhtmltopdf='./bin/wkhtmltopdf')
                     pdf = pdfkit.from_string(html, False,configuration=config, css=css)

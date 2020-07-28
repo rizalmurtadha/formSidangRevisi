@@ -124,9 +124,10 @@
             <h5>Dengan nilai akhir:</h5>
             <div  class="container d-flex justify-content-center" style="width: 10%;" >
                 {% if(cetak=="1"): %}
-                    <label class="Label-Index" name="IA" id="IA"  size="3" ><h3><b>{{IA}}</b></h3></label>
+                    <label class="Label-Index" name="IA" id="IA"  size="3" ><h3><b>{{LIA}}</b></h3></label>
                 {% else: %}
-                <select class="custom-select" name="IA"id="IA">
+                    <label class="Label-Index" name="IA" id="IA"  size="3" ><h3><b>{{LIA}}</b></h3></label>
+                <!-- <select class="custom-select" name="IA"id="IA">
                     <option value="" selected></option>
                     <option value="A"  >A</option>
                     <option value="AB" >AB</option>
@@ -135,7 +136,7 @@
                     <option value="C"  >C</option>
                     <option value="D"  >D</option>
                     <option value="E"  >E</option>
-                </select>
+                </select> -->
                 {% endif %}
             </div>
             <br>
@@ -658,7 +659,7 @@
             </form>
             {% if(cetak!="1"): %}
             <br><br>
-            <small>Created by: Rizal and IKN</small>
+            <small>Created by: Rizal Murtadha and IKN</small>
             <br><br>
             {% endif %}
             
