@@ -55,6 +55,12 @@
                   <input type="password" class="form-control" id="inputPassword" name="password">
                 </div>
             </div>
+            {% if(message=="error"): %}
+                <p style="text-align: center;">Username tidak terdaftar</p>
+            {% elif(message=="pwdSalah"): %}
+                <p style="text-align: center;">Password salah</p>
+            {% endif %}
+            <br>
             <div class="d-flex justify-content-center">
                 <button type="submit" class="btn btn-outline-primary btn-lg" id="Login" name="Login" value="1">Login</button>
             </div>

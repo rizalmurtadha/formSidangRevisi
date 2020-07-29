@@ -58,12 +58,12 @@ def login():
 
 @app.route("/admin",methods=["GET", "POST"])
 def admin():
-    if "user" in session:
-        user = session["user"]
-        return render_template("admin.html")
-    else:
-        return redirect(url_for("login"))
-    # return render_template("admin.html")
+    # if "user" in session:
+    #     user = session["user"]
+    #     return render_template("admin.html")
+    # else:
+    #     return redirect(url_for("login"))
+    return render_template("admin.html")
 
 @app.route("/form-sidang",methods=["GET", "POST"])
 def index():
