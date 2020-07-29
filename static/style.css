@@ -30,6 +30,9 @@
     color: black;
 }
 
+.alert_{
+    color: red;
+}
 
 .Label-Index{
     background-color: white;

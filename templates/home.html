@@ -8,17 +8,32 @@
     <br><br><br>
     <div class="container d-flex justify-content-center" id="form-home">
         <form action="{{ url_for('index') }}" id="my-form" method="POST" enctype=multipart/form-data>
-            <h5>Silahkan isi NIM Mahasiswa</h5>
-            <input type="text" class="form-control" name="NIM" id="NIM" >
-            {% if(message=="tidak ada"): %}
-                <p style="text-align: center;">NIM Mahasiswa tidak ditemukan<br> di jadwal sidang</p>
-            {% endif %}
+            <h5>Silahkan isi NIM Mahasiswa dan Password</h5>
+            <div class="form-group row">
+                <label for="NIM" class="col-4 col-form-label">NIM</label>
+                <div class="col-8">
+                    <input type="text" class="form-control" name="NIM" id="NIM" >
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="password" class="col-4 col-form-label">Password</label>
+                <div class="col-8">
+                    <input type="password" class="form-control" name="password" id="password" >
+                </div>
+            </div>
+            <div class="container" style="min-height: 40px; text-align: center;">
+                {% if(message=="tidak ada"): %}
+                    <p class="alert_" style="text-align: center;">NIM Mahasiswa tidak ditemukan di jadwal sidang</p>
+                {% elif(message=="pwd salah"): %}
+                    <p class="alert_" style="text-align: center;">Password salah</p>
+                {% endif %}
+            </div>
             <br>
             <div class="d-flex justify-content-center">
-                <button type="submit" class="btn btn-outline-primary btn-lg" id="cari" name="cari" value="1">Cari</button>
+                <button type="submit" class="btn btn-outline-primary btn-lg" id="cari" name="cari" value="1">Login</button>
                 <!-- <a href="#" class="btn btn-outline-primary btn-lg">Cari</a> -->
-                &nbsp;  &nbsp;
-                <button type="submit" class="btn btn-outline-primary btn-lg" id="cari" name="cari" value="0">Skip</button>
+                <!-- &nbsp;  &nbsp; -->
+                <!-- <button type="submit" class="btn btn-outline-primary btn-lg" id="cari" name="cari" value="0">Skip</button> -->
             </div>
         </form>
     </div>

@@ -18,6 +18,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 path_data = os.path.join(APP_ROOT, 'data/')
+path_jadwal_sidang = "/".join([path_data,"jadwal_sidang"])
 data_admin = "/".join([path_data,"login_admin.p"])
 data_recap = "/".join([path_data,"recap.p"])
 data_lecturer = "/".join([path_data,"lec_code.p"])
@@ -73,10 +74,12 @@ def admin():
 def unggah():
     if request.method=="POST":
         file = request.files["file"]
-        # load schedule
+        # load schedule (.p)
         schedule = joblib.load(data_schedule)
         # grab upload excel name
         excel_name = file.filename
+        destination = "/".join([path_jadwal_sidang,file.filename])
+        file.save(destination)
         # load added schedule
         path_excel = "/".join(["data/jadwal_sidang",excel_name])
         add_schedule =pd.read_excel(path_excel)
@@ -88,7 +91,6 @@ def unggah():
                        'Waktu', 'Pukul', 'Keterangan', 'Lokasi']
         # verify uploaded file is suitable
         if col_name != col_name_ref:
-            return "masuk sini"
         # tampilkan tulisan "Format file yang diunggah tidak sesuai dengan template"
             return render_template("unggah.html",message="tidak sesuai")
         else:
@@ -151,10 +153,16 @@ def index():
                 if(nim==""):
                     # return redirect(url_for("home"))
                     return render_template("home.html",message="tidak ada")
-                nim = int(nim)
-                dataMhs = cariMhs(nim)
+                passwd_user = request.form["password"]
+                try:
+                    nim = int(nim)
+                except:
+                    return render_template("home.html",message="tidak ada")
+                dataMhs = cariMhs(nim,passwd_user)
                 if (dataMhs=="tidak ada"):
                     return render_template("home.html",message="tidak ada")
+                elif (dataMhs=="pwd salah"):
+                    return render_template("home.html",message="pwd salah")
                 else:
                     editable="0"
                     return render_template("index.html", NIM=dataMhs[0], MHS=dataMhs[1],
@@ -194,7 +202,7 @@ def index():
             DPg22 = request.form['DPg22']
             DPg23 = request.form['DPg23']
 
-
+            editable = request.form['editable']
             KL = request.form['KL']
             # IA = request.form['IA']
             RVS = request.form['RVS']
@@ -261,7 +269,7 @@ def index():
 
     return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time,editable=editable)
 
-def cariMhs(nim):
+def cariMhs(nim,passwd_user):
     # [lec_code, schedule] = joblib.load(data_mahasiswa)
     lec_code = joblib.load(data_lecturer)
     schedule = joblib.load(data_schedule)
@@ -277,35 +285,41 @@ def cariMhs(nim):
     else:
         # filter data
         sel_data = schedule[schedule.NIM == nim]
+        # verifikasi password
+        passwd_ref = sel_data["Password"].values[0]
+        if passwd_user != passwd_ref:
+            # muncul pop up dengan tulisan “Password salah” dan halaman tidak berubah
+            return "pwd salah"
         # grab nama
-        nama = sel_data["Nama"].values[0]
-        # grab judul
-        judul = sel_data["Judul"].values[0]
-        # list kode dosen
-        lec_code_list = lec_code.kode.values.tolist()
-        # grab nama pembimbing 1
-        pbb1 = sel_data["Pembimbing 1"].values[0]
-        if pbb1 in lec_code_list:
-            pbb1 = lec_code[lec_code.kode == pbb1].nama.values[0]
-        # grab nama pembimbing 2
-        pbb2 = sel_data["Pembimbing 2"].values[0]
-        if pbb2 != 0:
-            if pbb2 in lec_code_list:
-                pbb2 = lec_code[lec_code.kode == pbb2].nama.values[0]
         else:
-            pbb2 = ""
-        # grab nama penguji 1
-        pgj1 = sel_data["Penguji 1"].values[0]
-        if pgj1 in lec_code_list:
-            pgj1 = lec_code[lec_code.kode == pgj1].nama.values[0]
-        # grab nama penguji 2
-        pgj2 = sel_data["Penguji 2"].values[0]
-        if pgj2 in lec_code_list:
-            pgj2 = lec_code[lec_code.kode == pgj2].nama.values[0]
-        # grab lokasi sidang
-        lokasi = sel_data["Lokasi"].values[0]
-        # kirim variable ke halaman selanjutnya
-        return [nim, nama, judul, pbb1, pbb2, pgj1, pgj2, lokasi]
+            nama = sel_data["Nama"].values[0]
+            # grab judul
+            judul = sel_data["Judul"].values[0]
+            # list kode dosen
+            lec_code_list = lec_code.kode.values.tolist()
+            # grab nama pembimbing 1
+            pbb1 = sel_data["Pembimbing 1"].values[0]
+            if pbb1 in lec_code_list:
+                pbb1 = lec_code[lec_code.kode == pbb1].nama.values[0]
+            # grab nama pembimbing 2
+            pbb2 = sel_data["Pembimbing 2"].values[0]
+            if pbb2 != 0:
+                if pbb2 in lec_code_list:
+                    pbb2 = lec_code[lec_code.kode == pbb2].nama.values[0]
+            else:
+                pbb2 = ""
+            # grab nama penguji 1
+            pgj1 = sel_data["Penguji 1"].values[0]
+            if pgj1 in lec_code_list:
+                pgj1 = lec_code[lec_code.kode == pgj1].nama.values[0]
+            # grab nama penguji 2
+            pgj2 = sel_data["Penguji 2"].values[0]
+            if pgj2 in lec_code_list:
+                pgj2 = lec_code[lec_code.kode == pgj2].nama.values[0]
+            # grab lokasi sidang
+            lokasi = sel_data["Lokasi"].values[0]
+            # kirim variable ke halaman selanjutnya
+            return [nim, nama, judul, pbb1, pbb2, pgj1, pgj2, lokasi]
 
 
 ind_to_val = {"A":4, "AB":3.5, "B":3, "BC":2.5, "C":2, "D":1, "E":0}

@@ -78,8 +78,10 @@
                         <th style="width: 30%;">&nbsp; NIM</th>
                         <td id="Content-border">
                             {% if(editable=="0"): %}
+                            <input type="hidden" name="editable" value="{{editable}}">
                             <input type="text" class="form-control" name="NIM" id="NIM" value="{{NIM}}" readonly="readonly">
                             {% else: %}
+                            <input type="hidden" name="editable" value="{{editable}}">
                             <input type="text" class="form-control" name="NIM" id="NIM" value="{{NIM}}" >
                             {% endif %}
                         </td>
@@ -494,7 +496,7 @@
                         </div>
                         <div class="col-12 d-flex justify-content-center">
                             {% if(message=="error"): %}
-                            <p>Pengisian nilai dari pembimbing/penguji belum benar</p>
+                            <p class="alert_">Pengisian nilai dari pembimbing / penguji belum benar</p>
                             {% endif %}
                         </div>
                     </div>
