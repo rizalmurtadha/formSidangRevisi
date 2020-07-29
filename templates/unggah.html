@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Unggah Dokumen{% endblock %}
+{% block content %}
+    <br><br><br>
+    <div class="container d-flex justify-content-center" id="form-home">
+        <form action="{{ url_for('unggah') }}" id="my-form" method="POST" enctype=multipart/form-data style="width: 40%;">
+            <p>Unggah Dokumen</p>
+            <div class="row">
+                <div class="col-9">
+                    <div class="custom-file" style="width: 90%;">
+                        <input type="file" class="custom-file-input" accept=".xlsx" id="customFile" name="file" required>
+                        <label class="custom-file-label" for="customFile">Pilih dokumen..</label>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <button type="submit" class="btn btn-outline-primary btn-md" id="unggah" name="unggah" value="1">Unggah</button>
+                </div>
+            </div>
+            <br>
+            <div class="container" style="min-height: 40px;">
+                {% if(message=="tidak sesuai"): %}
+                    <p style="text-align: left;">Format file yang diunggah tidak sesuai dengan template</p>
+                {% endif %}
+                
+            </div>
+            <p>Pastikan format file yang digunakan sesuai dengan template</p>
+            <a href="{{ url_for('download_files',filename='schedule_template.xlsx') }}" class="btn btn-primary">Unduh template</a>
+        </form>
+    </div>
+
+    <script>
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function() {
+          var fileName = $(this).val().split("\\").pop();
+          $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+    </script>
+{% endblock %}

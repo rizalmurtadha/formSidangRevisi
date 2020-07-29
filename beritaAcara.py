@@ -8,6 +8,8 @@ import datetime as dtm
 from datetime import date,datetime
 import pytz
 import joblib
+import secrets
+import string
 
 
 app = Flask(__name__)
@@ -20,7 +22,7 @@ data_admin = "/".join([path_data,"login_admin.p"])
 data_recap = "/".join([path_data,"recap.p"])
 data_lecturer = "/".join([path_data,"lec_code.p"])
 data_schedule = "/".join([path_data,"schedule.p"])
-data_xlsx = "/".join([path_data,"Rekap-Sidang-TA.xlsx"])
+data_rekap_xlsx = "/".join([path_data,"Rekap-Sidang-TA.xlsx"])
 
 
 @app.route("/",methods=["GET", "POST"])
@@ -66,6 +68,65 @@ def admin():
     else:
         return redirect(url_for("login"))
     # return render_template("admin.html")
+
+@app.route("/admin/unggah",methods=["GET", "POST"])
+def unggah():
+    if request.method=="POST":
+        file = request.files["file"]
+        # load schedule
+        schedule = joblib.load(data_schedule)
+        # grab upload excel name
+        excel_name = file.filename
+        # load added schedule
+        path_excel = "/".join(["data/jadwal_sidang",excel_name])
+        add_schedule =pd.read_excel(path_excel)
+        col_name = add_schedule.columns.tolist()
+        # return str(col_name[5])
+        # return str(len(col_name))
+        col_name_ref =['No.', 'Nama', 'NIM', 'E-mail', 'KK', 'Pembimbing 1',
+                       'Pembimbing 2', 'Penguji 1', 'Penguji 2','Judul', 
+                       'Waktu', 'Pukul', 'Keterangan', 'Lokasi']
+        # verify uploaded file is suitable
+        if col_name != col_name_ref:
+            return "masuk sini"
+        # tampilkan tulisan "Format file yang diunggah tidak sesuai dengan template"
+            return render_template("unggah.html",message="tidak sesuai")
+        else:
+            inp_schedule = add_schedule.iloc[:,[1,2,5,6,7,8,9,13]]
+            # generate password
+            list_passwd = gen_passwd(inp_schedule.shape[0])
+            # insert password into dataframe
+            inp_schedule["Password"] = list_passwd
+            add_schedule["Password"] = list_passwd
+            # find difference
+            schedule_nim_set = set(schedule.NIM.values.tolist())
+            inp_schedule_nim_set = set(inp_schedule.NIM.values.tolist())
+            diff_ = list(schedule_nim_set - inp_schedule_nim_set)
+            diff_schedule = schedule[schedule.NIM.isin(diff_)]
+            # concat
+            new_schedule = pd.concat([diff_schedule, inp_schedule], axis=0)
+            new_schedule.reset_index(drop=True, inplace=True)
+            # save to excel
+            excel_pwd_name = file.filename.replace(".xlsx","_pwd.xlsx")
+            path_excel_pwd = "/".join(["data/jadwal_sidang/",excel_pwd_name])
+            add_schedule.to_excel(path_excel_pwd, index=None)
+            # save as pickle
+            joblib.dump(new_schedule, data_schedule)
+            path_jadwal = os.path.join(APP_ROOT, 'data/jadwal_sidang')
+            return send_from_directory(path_jadwal,
+                               filename=excel_pwd_name, as_attachment=True)
+            # return path_excel_pwd
+    return render_template("unggah.html")
+
+# function for generating password
+def gen_passwd(n):
+    list_passwd = []
+    for i in range(n):
+        alphabet = string.ascii_letters + string.digits
+        password = ''.join(secrets.choice(alphabet) for i in range(6))
+        list_passwd.append(password)
+    return list_passwd
+
 
 @app.route("/form-sidang",methods=["GET", "POST"])
 def index():
@@ -176,7 +237,7 @@ def index():
                     recap = joblib.load(data_recap)
                     recap = recap.append({"NIM":NIM, "Nama":MHS, "Judul":JTA, "Indeks":LIA}, ignore_index=True)
                     joblib.dump(recap, data_recap)
-                    recap.to_excel(data_xlsx, index=None)
+                    recap.to_excel(data_rekap_xlsx, index=None)
 
                     # print pdf
                     filename_pdf = "Form-Sidang-"+NIM+"-"+MHS+".pdf"
@@ -329,18 +390,9 @@ def indexing(nilai_akhir):
     else: LIA = "E"
     return LIA
 
-@app.route('/admin/')
-def download_filse():
-    # return folder
-    # try:
-    #     response = send_from_directory(os.path.join(APP_ROOT),
-    #                                    filename=filename)
-    #     response.cache_control.max_age = 60  # e.g. 1 minute
-    #     return response
-
-    # except:
-    #     return str("asd")
-    filename = "Rekap-Sidang-TA.xlsx"
+@app.route('/admin/<string:filename>')
+def download_files(filename):
+    # filename = "Rekap-Sidang-TA.xlsx"
     return send_from_directory(path_data,
                                filename=filename, as_attachment=True)
 
