@@ -3,8 +3,8 @@
 {% block content %}
     <br><br><br><br><br>
     <div class="container d-flex justify-content-center">
-        <a href="{{ url_for('download_files', filename='Rekap-Sidang-TA.xlsx') }}" class="btn btn-primary">Unduh Dokumen</a>
-        &nbsp; &nbsp; &nbsp; &nbsp; 
         <a href="{{ url_for('unggah') }}" class="btn btn-primary">Unggah Dokumen</a>
+        &nbsp; &nbsp; &nbsp; &nbsp; 
+        <a href="{{ url_for('download_files', filename='Rekap-Sidang-TA.xlsx') }}" class="btn btn-primary">Unduh Dokumen</a>
     </div>
 {% endblock %}
