@@ -14,6 +14,12 @@ app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+path_data = os.path.join(APP_ROOT, 'data/')
+data_admin = "/".join([path_data,"login_admin.p"])
+data_recap = "/".join([path_data,"recap.p"])
+data_mahasiswa = "/".join([path_data,"database.p"])
+data_xlsx = "/".join([path_data,"Rekap-Sidang-TA.xlsx"])
+
 
 @app.route("/",methods=["GET", "POST"])
 def home():
@@ -27,7 +33,7 @@ def login():
         except:
             Login = "0"
         if(Login=="1"):
-            login = joblib.load("login_admin.p")
+            login = joblib.load(data_admin)
             login_list = login.username.values.tolist()
 
             # misal input username di-assign sebagai variable "username"
@@ -135,65 +141,65 @@ def index():
             if(current_time!=time and time!=""):
                 current_time=time
 
-            # try:
             try:
-                cetak = request.form['cetak']
+                try:
+                    cetak = request.form['cetak']
+                except:
+                    cetak = "0"
+
+                LPb = hitungPembimbing(DPb11,DPb12,DPb13,DPb21,DPb22,DPb23)
+                LPg = hitungPenguji(DPg11,DPg12,DPg13,DPg21,DPg22,DPg23)
+                LNP = hitungNilaiTotal(LPb,LPg)
+                LNA = hitungNilaiAkhir(LNP)
+                INA =round( (0.35*LNA[0]) + (0.3*LNA[1]) + (0.35*LNA[2]),2) 
+                LIA = indexing(INA)
+                html = render_template("index.html",
+                                    DPb11=DPb11, DPb12=DPb12, DPb13=DPb13,
+                                    DPb21=DPb21, DPb22=DPb22, DPb23=DPb23,
+                                    LPb1=LPb[0] , LPb2=LPb[1] , LPb3=LPb[2] ,
+                                    DPg11=DPg11, DPg12=DPg12, DPg13=DPg13,
+                                    DPg21=DPg21, DPg22=DPg22, DPg23=DPg23,
+                                    LPg1=LPg[0] , LPg2=LPg[1] , LPg3=LPg[2] ,
+                                    LNP1=LNP[0] , LNP2=LNP[1] , LNP3=LNP[2] ,
+                                    LNA1=LNA[0] , LNA2=LNA[1] , LNA3=LNA[2] ,
+                                    LIA=LIA, INA=INA, NIM=NIM,
+                                    MHS=MHS, JTA=JTA, pbb1=pbb1,
+                                    KL=KL,
+                                    pbb2=pbb2, pgj1=pgj1, pgj2=pgj2, cetak=cetak,
+                                    RVS=RVS,  message="success" ,date=today,
+                                    dead_rev=dead_rev, current_time=current_time, ruangan=ruangan, editable=editable)
+                # return cetak
+                if (cetak=="1"):
+                    # recap
+                    recap = joblib.load(data_recap)
+                    recap = recap.append({"NIM":NIM, "Nama":MHS, "Judul":JTA, "Indeks":LIA}, ignore_index=True)
+                    joblib.dump(recap, data_recap)
+                    recap.to_excel(data_xlsx, index=None)
+
+                    # print pdf
+                    filename_pdf = "Form-Sidang-"+NIM+"-"+MHS+".pdf"
+                    headers_filename = "attachment; filename="+filename_pdf
+                    css = ["static/css/bootstrap.min.css","static/style.css"]
+                    # uncomment config yang dipilih
+                    # config for heroku
+                    config = pdfkit.configuration(wkhtmltopdf='./bin/wkhtmltopdf')
+                    pdf = pdfkit.from_string(html, False,configuration=config, css=css)
+                    # config for local pc
+                    # pdf = pdfkit.from_string(html, False, css=css)
+                    response = make_response(pdf)
+                    response.headers["Content-Type"] = "application/pdf"
+                    response.headers["Content-Disposition"] = headers_filename
+                    return response
+                else:
+                    return html
             except:
-                cetak = "0"
-
-            LPb = hitungPembimbing(DPb11,DPb12,DPb13,DPb21,DPb22,DPb23)
-            LPg = hitungPenguji(DPg11,DPg12,DPg13,DPg21,DPg22,DPg23)
-            LNP = hitungNilaiTotal(LPb,LPg)
-            LNA = hitungNilaiAkhir(LNP)
-            INA =round( (0.35*LNA[0]) + (0.3*LNA[1]) + (0.35*LNA[2]),2) 
-            LIA = indexing(INA)
-            html = render_template("index.html",
-                                DPb11=DPb11, DPb12=DPb12, DPb13=DPb13,
-                                DPb21=DPb21, DPb22=DPb22, DPb23=DPb23,
-                                LPb1=LPb[0] , LPb2=LPb[1] , LPb3=LPb[2] ,
-                                DPg11=DPg11, DPg12=DPg12, DPg13=DPg13,
-                                DPg21=DPg21, DPg22=DPg22, DPg23=DPg23,
-                                LPg1=LPg[0] , LPg2=LPg[1] , LPg3=LPg[2] ,
-                                LNP1=LNP[0] , LNP2=LNP[1] , LNP3=LNP[2] ,
-                                LNA1=LNA[0] , LNA2=LNA[1] , LNA3=LNA[2] ,
-                                LIA=LIA, INA=INA, NIM=NIM,
-                                MHS=MHS, JTA=JTA, pbb1=pbb1,
-                                KL=KL,
-                                pbb2=pbb2, pgj1=pgj1, pgj2=pgj2, cetak=cetak,
-                                RVS=RVS,  message="success" ,date=today,
-                                dead_rev=dead_rev, current_time=current_time, ruangan=ruangan, editable=editable)
-            # return cetak
-            if (cetak=="1"):
-                # recap
-                recap = joblib.load("recap.p")
-                recap = recap.append({"NIM":NIM, "Nama":MHS, "Judul":JTA, "Indeks":LIA}, ignore_index=True)
-                joblib.dump(recap, "recap.p")
-                recap.to_excel("Rekap-Sidang-TA.xlsx", index=None)
-
-                # print pdf
-                filename_pdf = "Form-Sidang-"+NIM+"-"+MHS+".pdf"
-                headers_filename = "attachment; filename="+filename_pdf
-                css = ["static/css/bootstrap.min.css","static/style.css"]
-                # uncomment config yang dipilih
-                # config for heroku
-                config = pdfkit.configuration(wkhtmltopdf='./bin/wkhtmltopdf')
-                pdf = pdfkit.from_string(html, False,configuration=config, css=css)
-                # config for local pc
-                # pdf = pdfkit.from_string(html, False, css=css)
-                response = make_response(pdf)
-                response.headers["Content-Type"] = "application/pdf"
-                response.headers["Content-Disposition"] = headers_filename
-                return response
-            else:
-                return html
-            # except:
-            #     cetak="0"
-            #     return render_template("index.html", cetak=cetak, message="error",date=today,dead_rev=dead_rev, current_time=current_time,editable=editable)
+                cetak="0"
+                return render_template("index.html", cetak=cetak, message="error",date=today,dead_rev=dead_rev, current_time=current_time,editable=editable)
 
     return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time,editable=editable)
 
 def cariMhs(nim):
-    [lec_code, schedule] = joblib.load("database.p")
+    [lec_code, schedule] = joblib.load(data_mahasiswa)
     nim_list = schedule.NIM.values.tolist()
 
     # misal value NIM yang diisikan di-assign sebagai “nim”
@@ -330,7 +336,7 @@ def download_filse():
     # except:
     #     return str("asd")
     filename = "Rekap-Sidang-TA.xlsx"
-    return send_from_directory(os.path.join(APP_ROOT),
+    return send_from_directory(path_data,
                                filename=filename, as_attachment=True)
 
 @app.after_request
