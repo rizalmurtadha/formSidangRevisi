@@ -10,7 +10,7 @@ import pytz
 import joblib
 
 
-app = Flask(__name__) 
+app = Flask(__name__)
 app.secret_key = "form-sidang-IKN"
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
@@ -18,7 +18,8 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 path_data = os.path.join(APP_ROOT, 'data/')
 data_admin = "/".join([path_data,"login_admin.p"])
 data_recap = "/".join([path_data,"recap.p"])
-data_mahasiswa = "/".join([path_data,"database.p"])
+data_lecturer = "/".join([path_data,"lec_code.p"])
+data_schedule = "/".join([path_data,"schedule.p"])
 data_xlsx = "/".join([path_data,"Rekap-Sidang-TA.xlsx"])
 
 
@@ -72,10 +73,10 @@ def index():
     dead_rev = today + dtm.timedelta(days=15)
     today = "{:%d-%b-%Y}".format(today)
     dead_rev = "{:%d-%b-%Y}".format(dead_rev)
-    UTC = pytz.utc   
-    timeZ_Jkt = pytz.timezone('Asia/Jakarta')  
-    dt_Jkt = datetime.now(timeZ_Jkt) 
-    # print(dt_Jkt.strftime(' %H:%M:%S %Z %z')) 
+    UTC = pytz.utc
+    timeZ_Jkt = pytz.timezone('Asia/Jakarta')
+    dt_Jkt = datetime.now(timeZ_Jkt)
+    # print(dt_Jkt.strftime(' %H:%M:%S %Z %z'))
     current_time = dt_Jkt.strftime('%H:%M')
     cetak = "0"
     editable = "1"
@@ -131,7 +132,7 @@ def index():
             DPg21 = request.form['DPg21']
             DPg22 = request.form['DPg22']
             DPg23 = request.form['DPg23']
-            
+
 
             KL = request.form['KL']
             # IA = request.form['IA']
@@ -152,7 +153,7 @@ def index():
                 LPg = hitungPenguji(DPg11,DPg12,DPg13,DPg21,DPg22,DPg23)
                 LNP = hitungNilaiTotal(LPb,LPg)
                 LNA = hitungNilaiAkhir(LNP)
-                INA =round( (0.35*LNA[0]) + (0.3*LNA[1]) + (0.35*LNA[2]),2) 
+                INA =round( (0.35*LNA[0]) + (0.3*LNA[1]) + (0.35*LNA[2]),2)
                 LIA = indexing(INA)
                 html = render_template("index.html",
                                     DPb11=DPb11, DPb12=DPb12, DPb13=DPb13,
@@ -200,8 +201,11 @@ def index():
     return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time,editable=editable)
 
 def cariMhs(nim):
-    [lec_code, schedule] = joblib.load(data_mahasiswa)
+    # [lec_code, schedule] = joblib.load(data_mahasiswa)
+    lec_code = joblib.load(data_lecturer)
+    schedule = joblib.load(data_schedule)
     nim_list = schedule.NIM.values.tolist()
+    print(nim in nim_list)
 
     # misal value NIM yang diisikan di-assign sebagai “nim”
     # condition 1
@@ -219,26 +223,26 @@ def cariMhs(nim):
         # list kode dosen
         lec_code_list = lec_code.kode.values.tolist()
         # grab nama pembimbing 1
-        pbb1 = sel_data["Pembimbing_1"].values[0]
+        pbb1 = sel_data["Pembimbing 1"].values[0]
         if pbb1 in lec_code_list:
             pbb1 = lec_code[lec_code.kode == pbb1].nama.values[0]
         # grab nama pembimbing 2
-        pbb2 = sel_data["Pembimbing_2"].values[0]
+        pbb2 = sel_data["Pembimbing 2"].values[0]
         if pbb2 != 0:
             if pbb2 in lec_code_list:
                 pbb2 = lec_code[lec_code.kode == pbb2].nama.values[0]
         else:
             pbb2 = ""
         # grab nama penguji 1
-        pgj1 = sel_data["Penguji_1"].values[0]
+        pgj1 = sel_data["Penguji 1"].values[0]
         if pgj1 in lec_code_list:
             pgj1 = lec_code[lec_code.kode == pgj1].nama.values[0]
         # grab nama penguji 2
-        pgj2 = sel_data["Penguji_2"].values[0]
+        pgj2 = sel_data["Penguji 2"].values[0]
         if pgj2 in lec_code_list:
             pgj2 = lec_code[lec_code.kode == pgj2].nama.values[0]
         # grab lokasi sidang
-        lokasi = sel_data["lokasi"].values[0]
+        lokasi = sel_data["Lokasi"].values[0]
         # kirim variable ke halaman selanjutnya
         return [nim, nama, judul, pbb1, pbb2, pgj1, pgj2, lokasi]
 
@@ -293,7 +297,7 @@ def hitungPenguji(DPg11,DPg12,DPg13,DPg21,DPg22,DPg23):
     LPg=[LPg1,LPg2,LPg3]
     return LPg
 
-def hitungNilaiTotal(LPb,LPg):   
+def hitungNilaiTotal(LPb,LPg):
     # Nilai Hasil Perhituingan
     # CLO1
     LNP1 = (0.6*LPb[0]) + (0.4* LPg[0])
@@ -305,7 +309,7 @@ def hitungNilaiTotal(LPb,LPg):
     return LNP
 
 def hitungNilaiAkhir(LNP):
-    # Nilai Akhir 
+    # Nilai Akhir
     # CLO1
     LNA1 = LNP[0]
     # CLO2
