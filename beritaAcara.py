@@ -11,6 +11,7 @@ import joblib
 
 
 app = Flask(__name__) 
+app.secret_key = "form-sidang-IKN"
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
