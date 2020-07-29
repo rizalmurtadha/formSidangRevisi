@@ -479,15 +479,18 @@
                     <div class="row">
                         <div class="col-12 d-flex justify-content-center">
                             {% if(cetak=="0"):%}
-                                {% if message!="success" : %}
+                                <!-- {% if message!="success" : %}
                                     <button type="reset" class="btn btn-outline-primary btn-lg" id="hitung" name="hitung" value=0>Reset</button>
                                 {% else : %}
                                     <button type="submit" class="btn btn-outline-primary btn-lg" id="hitung" name="hitung" value=0>Reset</button>
-                                {% endif %}
+                                {% endif %} -->
                                 <button type="submit" class="btn btn-outline-primary btn-lg" id="hitung" name="hitung" value=1>Hitung</button>
-                                <button type="submit" class="btn btn-outline-primary btn-lg" id="cetak" name="cetak" value="1" >Cetak</button>
-                                <!-- <button type="submit" class="btn btn-outline-primary btn-lg" id="cetak" name="cetak" value="1" formnovalidate>Cetak</button> -->
+                                {% if(message=="success"): %}
+                                <button type="submit" class="btn btn-outline-primary btn-lg" id="cetak" name="cetak" value="1" >Submit</button>
                                 {% endif %}
+                                <!-- <button type="submit" class="btn btn-outline-primary btn-lg" id="cetak" name="cetak" value="1" >Cetak</button> -->
+                                <!-- <button type="submit" class="btn btn-outline-primary btn-lg" id="cetak" name="cetak" value="1" formnovalidate>Cetak</button> -->
+                            {% endif %}
                         </div>
                         <div class="col-12 d-flex justify-content-center">
                             {% if(message=="error"): %}

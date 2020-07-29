@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Home</title>
+    <title>Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}" >
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}">   
 </head>
@@ -39,23 +39,24 @@
 
             </tbody>
         </table>
-        <a href="{{ url_for('login') }}" class="btn btn-link">Admin</a>
     </div>
-    
     <br><br><br>
-    <div class="container d-flex justify-content-center" id="form-home">
-        <form action="{{ url_for('index') }}" id="my-form" method="POST" enctype=multipart/form-data>
-            <h5>Silahkan isi NIM Mahasiswa</h5>
-            <input type="text" class="form-control" name="NIM" id="NIM" >
-            {% if(message=="tidak ada"): %}
-                <p style="text-align: center;">NIM Mahasiswa tidak ditemukan<br> di jadwal sidang</p>
-            {% endif %}
-            <br>
+    <div class="container d-flex justify-content-center" id="form-login">
+        <form action="{{ url_for('login') }}" id="my-form" method="POST" enctype=multipart/form-data style="width: 30%;">
+            <div class="form-group row">
+                <label for="username" class="col-4 col-form-label">Username</label>
+                <div class="col-8">
+                  <input type="text" class="form-control" id="username" name="username">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="inputPassword" class="col-4 col-form-label">Password</label>
+                <div class="col-8">
+                  <input type="password" class="form-control" id="inputPassword" name="password">
+                </div>
+            </div>
             <div class="d-flex justify-content-center">
-                <button type="submit" class="btn btn-outline-primary btn-lg" id="cari" name="cari" value="1">Cari</button>
-                <!-- <a href="#" class="btn btn-outline-primary btn-lg">Cari</a> -->
-                &nbsp;  &nbsp;
-                <button type="submit" class="btn btn-outline-primary btn-lg" id="cari" name="cari" value="0">Skip</button>
+                <button type="submit" class="btn btn-outline-primary btn-lg" id="Login" name="Login" value="1">Login</button>
             </div>
         </form>
     </div>

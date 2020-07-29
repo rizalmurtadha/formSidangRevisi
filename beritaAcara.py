@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template, request, send_from_directory, make_response
+from flask import Flask, redirect, url_for, render_template, request, send_from_directory, make_response, session
 import os
 import pandas as pd
 import numpy as np
@@ -18,6 +18,47 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 @app.route("/",methods=["GET", "POST"])
 def home():
     return render_template("home.html")
+
+@app.route("/login",methods=["GET", "POST"])
+def login():
+    if request.method=="POST":
+        try:
+            Login = request.form['Login']
+        except:
+            Login = "0"
+        if(Login=="1"):
+            login = joblib.load("login_admin.p")
+            login_list = login.username.values.tolist()
+
+            # misal input username di-assign sebagai variable "username"
+            username = request.form['username']
+            # misal input password di-assign sebagai variable "password"
+            password = request.form['password']
+
+            if username not in login_list:
+                # tampilkan kalimat "Username tidak terdaftar"
+                return render_template("login.html",message="error")
+            else:
+                user_pwd = login[login.username == username].password[0]
+                if password != user_pwd:
+                    # tampilkan kalimat "Password salah"
+                    return render_template("login.html",message="pwdSalah")
+                else:
+                    # masuk ke halaman admin
+                    session["user"] = username
+                    return redirect(url_for("admin"))
+
+    return render_template("login.html")
+
+@app.route("/admin",methods=["GET", "POST"])
+def admin():
+    if "user" in session:
+        user = session["user"]
+        return render_template("admin.html")
+    else:
+        return redirect(url_for("login"))
+    # return render_template("admin.html")
+
 @app.route("/form-sidang",methods=["GET", "POST"])
 def index():
     today = date.today()
@@ -39,6 +80,7 @@ def index():
             else:
                 nim=request.form['NIM']
                 if(nim==""):
+                    # return redirect(url_for("home"))
                     return render_template("home.html",message="tidak ada")
                 nim = int(nim)
                 dataMhs = cariMhs(nim)
@@ -53,7 +95,6 @@ def index():
                                             dead_rev=dead_rev, current_time=current_time,editable=editable)
         except:
             cari = None
-            
 
         try:
             hitung = request.form['hitung']
@@ -94,53 +135,60 @@ def index():
             if(current_time!=time and time!=""):
                 current_time=time
 
+            # try:
             try:
-                try:
-                    cetak = request.form['cetak']
-                except:
-                    cetak = "0"
-
-                LPb = hitungPembimbing(DPb11,DPb12,DPb13,DPb21,DPb22,DPb23)
-                LPg = hitungPenguji(DPg11,DPg12,DPg13,DPg21,DPg22,DPg23)
-                LNP = hitungNilaiTotal(LPb,LPg)
-                LNA = hitungNilaiAkhir(LNP)
-                INA =round( (0.35*LNA[0]) + (0.3*LNA[1]) + (0.35*LNA[2]),2) 
-                LIA = indexing(INA)
-                html = render_template("index.html",
-                                    DPb11=DPb11, DPb12=DPb12, DPb13=DPb13,
-                                    DPb21=DPb21, DPb22=DPb22, DPb23=DPb23,
-                                    LPb1=LPb[0] , LPb2=LPb[1] , LPb3=LPb[2] ,
-                                    DPg11=DPg11, DPg12=DPg12, DPg13=DPg13,
-                                    DPg21=DPg21, DPg22=DPg22, DPg23=DPg23,
-                                    LPg1=LPg[0] , LPg2=LPg[1] , LPg3=LPg[2] ,
-                                    LNP1=LNP[0] , LNP2=LNP[1] , LNP3=LNP[2] ,
-                                    LNA1=LNA[0] , LNA2=LNA[1] , LNA3=LNA[2] ,
-                                    LIA=LIA, INA=INA, NIM=NIM,
-                                    MHS=MHS, JTA=JTA, pbb1=pbb1,
-                                    KL=KL,
-                                    pbb2=pbb2, pgj1=pgj1, pgj2=pgj2, cetak=cetak,
-                                    RVS=RVS,  message="success" ,date=today,
-                                    dead_rev=dead_rev, current_time=current_time, ruangan=ruangan, editable=editable)
-                # return cetak
-                if (cetak=="1"):
-                    filename_pdf = "Sidang_"+NIM+".pdf"
-                    headers_filename = "inline; filename="+filename_pdf
-                    css = ["static/css/bootstrap.min.css","static/style.css"]
-                    # uncomment config yang dipilih
-                    # config for heroku
-                    config = pdfkit.configuration(wkhtmltopdf='./bin/wkhtmltopdf')
-                    pdf = pdfkit.from_string(html, False,configuration=config, css=css)
-                    # config for local pc
-                    # pdf = pdfkit.from_string(html, False, css=css)
-                    response = make_response(pdf)
-                    response.headers["Content-Type"] = "application/pdf"
-                    response.headers["Content-Disposition"] = headers_filename
-                    return response
-                else:
-                    return html
+                cetak = request.form['cetak']
             except:
-                cetak="0"
-                return render_template("index.html", cetak=cetak, message="error",date=today,dead_rev=dead_rev, current_time=current_time,editable=editable)
+                cetak = "0"
+
+            LPb = hitungPembimbing(DPb11,DPb12,DPb13,DPb21,DPb22,DPb23)
+            LPg = hitungPenguji(DPg11,DPg12,DPg13,DPg21,DPg22,DPg23)
+            LNP = hitungNilaiTotal(LPb,LPg)
+            LNA = hitungNilaiAkhir(LNP)
+            INA =round( (0.35*LNA[0]) + (0.3*LNA[1]) + (0.35*LNA[2]),2) 
+            LIA = indexing(INA)
+            html = render_template("index.html",
+                                DPb11=DPb11, DPb12=DPb12, DPb13=DPb13,
+                                DPb21=DPb21, DPb22=DPb22, DPb23=DPb23,
+                                LPb1=LPb[0] , LPb2=LPb[1] , LPb3=LPb[2] ,
+                                DPg11=DPg11, DPg12=DPg12, DPg13=DPg13,
+                                DPg21=DPg21, DPg22=DPg22, DPg23=DPg23,
+                                LPg1=LPg[0] , LPg2=LPg[1] , LPg3=LPg[2] ,
+                                LNP1=LNP[0] , LNP2=LNP[1] , LNP3=LNP[2] ,
+                                LNA1=LNA[0] , LNA2=LNA[1] , LNA3=LNA[2] ,
+                                LIA=LIA, INA=INA, NIM=NIM,
+                                MHS=MHS, JTA=JTA, pbb1=pbb1,
+                                KL=KL,
+                                pbb2=pbb2, pgj1=pgj1, pgj2=pgj2, cetak=cetak,
+                                RVS=RVS,  message="success" ,date=today,
+                                dead_rev=dead_rev, current_time=current_time, ruangan=ruangan, editable=editable)
+            # return cetak
+            if (cetak=="1"):
+                # recap
+                recap = joblib.load("recap.p")
+                recap = recap.append({"NIM":NIM, "Nama":MHS, "Judul":JTA, "Indeks":LIA}, ignore_index=True)
+                joblib.dump(recap, "recap.p")
+                recap.to_excel("Rekap-Sidang-TA.xlsx", index=None)
+
+                # print pdf
+                filename_pdf = "Form-Sidang-"+NIM+"-"+MHS+".pdf"
+                headers_filename = "attachment; filename="+filename_pdf
+                css = ["static/css/bootstrap.min.css","static/style.css"]
+                # uncomment config yang dipilih
+                # config for heroku
+                config = pdfkit.configuration(wkhtmltopdf='./bin/wkhtmltopdf')
+                pdf = pdfkit.from_string(html, False,configuration=config, css=css)
+                # config for local pc
+                # pdf = pdfkit.from_string(html, False, css=css)
+                response = make_response(pdf)
+                response.headers["Content-Type"] = "application/pdf"
+                response.headers["Content-Disposition"] = headers_filename
+                return response
+            else:
+                return html
+            # except:
+            #     cetak="0"
+            #     return render_template("index.html", cetak=cetak, message="error",date=today,dead_rev=dead_rev, current_time=current_time,editable=editable)
 
     return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time,editable=editable)
 
@@ -270,7 +318,20 @@ def indexing(nilai_akhir):
     else: LIA = "E"
     return LIA
 
+@app.route('/admin/')
+def download_filse():
+    # return folder
+    # try:
+    #     response = send_from_directory(os.path.join(APP_ROOT),
+    #                                    filename=filename)
+    #     response.cache_control.max_age = 60  # e.g. 1 minute
+    #     return response
 
+    # except:
+    #     return str("asd")
+    filename = "Rekap-Sidang-TA.xlsx"
+    return send_from_directory(os.path.join(APP_ROOT),
+                               filename=filename, as_attachment=True)
 
 @app.after_request
 def add_header(r):

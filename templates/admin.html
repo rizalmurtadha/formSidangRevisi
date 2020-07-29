@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Home</title>
+    <title>Admin</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}" >
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}">   
 </head>
@@ -39,25 +39,10 @@
 
             </tbody>
         </table>
-        <a href="{{ url_for('login') }}" class="btn btn-link">Admin</a>
     </div>
-    
-    <br><br><br>
+    <br><br><br><br><br>
     <div class="container d-flex justify-content-center" id="form-home">
-        <form action="{{ url_for('index') }}" id="my-form" method="POST" enctype=multipart/form-data>
-            <h5>Silahkan isi NIM Mahasiswa</h5>
-            <input type="text" class="form-control" name="NIM" id="NIM" >
-            {% if(message=="tidak ada"): %}
-                <p style="text-align: center;">NIM Mahasiswa tidak ditemukan<br> di jadwal sidang</p>
-            {% endif %}
-            <br>
-            <div class="d-flex justify-content-center">
-                <button type="submit" class="btn btn-outline-primary btn-lg" id="cari" name="cari" value="1">Cari</button>
-                <!-- <a href="#" class="btn btn-outline-primary btn-lg">Cari</a> -->
-                &nbsp;  &nbsp;
-                <button type="submit" class="btn btn-outline-primary btn-lg" id="cari" name="cari" value="0">Skip</button>
-            </div>
-        </form>
+        <a href="{{ url_for('download_filse') }}" class="btn btn-primary">Unduh Dokumen</a>
     </div>
 </body>
 </html>
