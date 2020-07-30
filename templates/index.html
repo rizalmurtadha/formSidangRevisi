@@ -5,9 +5,9 @@
         {% if(cetak=="0"): %}
         <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}" >
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}">   
-        <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script> -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
         {% endif %}
     </head>
     <body onload="myFunction()">
@@ -488,12 +488,45 @@
                                 {% endif %} -->
                                 <button type="submit" class="btn btn-outline-primary btn-lg" id="hitung" name="hitung" value=1>Hitung</button>
                                 {% if(message=="success"): %}
-                                <button type="submit" class="btn btn-outline-primary btn-lg" id="cetak" name="cetak" value="1" >Submit</button>
+                                <button type="button" class="btn btn-outline-primary btn-lg" data-toggle="modal" data-target="#exampleModalCenter">
+                                    Submit
+                                </button>
+                                <!-- <button type="submit" class="btn btn-outline-primary btn-lg" id="cetak" name="cetak" value="1" >Submit</button> -->
                                 {% endif %}
                                 <!-- <button type="submit" class="btn btn-outline-primary btn-lg" id="cetak" name="cetak" value="1" >Cetak</button> -->
                                 <!-- <button type="submit" class="btn btn-outline-primary btn-lg" id="cetak" name="cetak" value="1" formnovalidate>Cetak</button> -->
                             {% endif %}
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Submit</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>
+                                        <div class="modal-body">
+                                        Apakah semua data sudah benar?
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-outline-primary btn-lg" id="cetak" name="cetak" value="1" >Ya</button>
+                                            <button type="button" class="btn btn-outline-primary btn-lg" data-dismiss="modal">Tidak</button>
+                                            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
                         </div>
+                        <script>
+                             $('#cetak').submit(function(e) {
+                                e.preventDefault();
+                                // Coding
+                                $('#exampleModalCenter').modal('hide');
+                                // $('#exampleModalCenter').modal('toggle'); //or  $('#exampleModalCenter').modal('hide');
+                                return false;
+                            });
+                        </script>
                         <div class="col-12 d-flex justify-content-center">
                             {% if(message=="error"): %}
                             <p class="alert_">Pengisian nilai dari pembimbing / penguji belum benar</p>

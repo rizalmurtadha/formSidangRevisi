@@ -56,15 +56,15 @@ def login():
                     return render_template("login.html",message="pwdSalah")
                 else:
                     # masuk ke halaman admin
-                    session["user"] = username
+                    session["admin"] = username
                     return redirect(url_for("admin"))
 
     return render_template("login.html")
 
 @app.route("/admin",methods=["GET", "POST"])
 def admin():
-    if "user" in session:
-        user = session["user"]
+    if "admin" in session:
+        admin = session["admin"]
         return render_template("admin.html")
     else:
         return redirect(url_for("login"))
@@ -72,7 +72,7 @@ def admin():
 
 @app.route("/admin/unggah",methods=["GET", "POST"])
 def unggah():
-    if "user" in session:
+    if "admin" in session:
         if request.method=="POST":
             file = request.files["file"]
             # load schedule (.p)
@@ -84,6 +84,7 @@ def unggah():
             # load added schedule
             path_excel = "/".join(["data/jadwal_sidang",excel_name])
             add_schedule =pd.read_excel(path_excel)
+            add_schedule.fillna(0, inplace=True)
             col_name = add_schedule.columns.tolist()
             # return str(col_name[5])
             # return str(len(col_name))
@@ -116,12 +117,20 @@ def unggah():
                 # save as pickle
                 joblib.dump(new_schedule, data_schedule)
                 path_jadwal = os.path.join(APP_ROOT, 'data/jadwal_sidang')
-                return send_from_directory(path_jadwal,
-                                filename=excel_pwd_name, as_attachment=True)
+                return render_template("unggah.html",download="true", filenames=excel_pwd_name)
+                return send_from_directory(path_jadwal,filename=excel_pwd_name, as_attachment=True)
+                # return render_template("unggah.html",download="true", filenames=excel_pwd_name)
                 # return path_excel_pwd
         return render_template("unggah.html")
     else:
         return redirect(url_for("login"))
+
+@app.route('/admin/unggah<string:filename>')
+def download_unggah(filename):
+    # filename = "Rekap-Sidang-TA.xlsx"
+    path_jadwal = os.path.join(APP_ROOT, 'data/jadwal_sidang')
+    return send_from_directory(path_jadwal,
+                               filename=filename, as_attachment=True)
 
 # function for generating password
 def gen_passwd(n):
@@ -163,11 +172,14 @@ def index():
                     return render_template("home.html",message="tidak ada")
                 dataMhs = cariMhs(nim,passwd_user)
                 if (dataMhs=="tidak ada"):
-                    return render_template("home.html",message="tidak ada")
+                    return render_template("home.html",message=dataMhs)
                 elif (dataMhs=="pwd salah"):
-                    return render_template("home.html",message="pwd salah")
+                    return render_template("home.html",message=dataMhs)
+                elif (dataMhs=="data sudah ada"):
+                    return render_template("home.html",message=dataMhs)
                 else:
                     editable="0"
+                    session["user"] = nim
                     return render_template("index.html", NIM=dataMhs[0], MHS=dataMhs[1],
                                             JTA=dataMhs[2], pbb1=dataMhs[3], pbb2=dataMhs[4],
                                             pgj1=dataMhs[5], pgj2=dataMhs[6], ruangan=dataMhs[7],
@@ -246,9 +258,10 @@ def index():
                 if (cetak=="1"):
                     # recap
                     recap = joblib.load(data_recap)
-                    recap = recap.append({"NIM":NIM, "Nama":MHS, "Judul":JTA, "Indeks":LIA}, ignore_index=True)
+                    new_today = dtm.datetime.strptime(today, '%d-%b-%Y')
+                    recap = recap.append({"Tanggal": new_today, "NIM":NIM, "Nama":MHS, "Judul":JTA, "Indeks":LIA}, ignore_index=True)
                     joblib.dump(recap, data_recap)
-                    recap.to_excel(data_rekap_xlsx, index=None)
+                    # recap.to_excel(data_rekap_xlsx, index=None)
 
                     # print pdf
                     filename_pdf = "Form-Sidang-"+NIM+"-"+MHS+".pdf"
@@ -256,10 +269,10 @@ def index():
                     css = ["static/css/bootstrap.min.css","static/style.css"]
                     # uncomment config yang dipilih
                     # config for heroku
-                    config = pdfkit.configuration(wkhtmltopdf='./bin/wkhtmltopdf')
-                    pdf = pdfkit.from_string(html, False,configuration=config, css=css)
+                    # config = pdfkit.configuration(wkhtmltopdf='./bin/wkhtmltopdf')
+                    # pdf = pdfkit.from_string(html, False,configuration=config, css=css)
                     # config for local pc
-                    # pdf = pdfkit.from_string(html, False, css=css)
+                    pdf = pdfkit.from_string(html, False, css=css)
                     response = make_response(pdf)
                     response.headers["Content-Type"] = "application/pdf"
                     response.headers["Content-Disposition"] = headers_filename
@@ -269,14 +282,16 @@ def index():
             except:
                 cetak="0"
                 return render_template("index.html", cetak=cetak, message="error",date=today,dead_rev=dead_rev, current_time=current_time,editable=editable)
-
+    return redirect(url_for("home"))
     return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time,editable=editable)
 
 def cariMhs(nim,passwd_user):
     # [lec_code, schedule] = joblib.load(data_mahasiswa)
     lec_code = joblib.load(data_lecturer)
     schedule = joblib.load(data_schedule)
+    recap = joblib.load(data_recap)
     nim_list = schedule.NIM.values.tolist()
+    recap_nim = recap.NIM.values.tolist()
     print(nim in nim_list)
 
     # misal value NIM yang diisikan di-assign sebagai “nim”
@@ -286,43 +301,48 @@ def cariMhs(nim,passwd_user):
         return "tidak ada"
     # condition 2
     else:
-        # filter data
-        sel_data = schedule[schedule.NIM == nim]
-        # verifikasi password
-        passwd_ref = sel_data["Password"].values[0]
-        if passwd_user != passwd_ref:
-            # muncul pop up dengan tulisan “Password salah” dan halaman tidak berubah
-            return "pwd salah"
-        # grab nama
+        # cek sudah pernah di inputkan atau belum
+        if nim in recap_nim:
+        # muncul pop up dengan tulisan “Nilai sidang TA Mahasiswa sudah dimasukkan ke database” dan halaman tidak berubah
+            return "data sudah ada"
         else:
-            nama = sel_data["Nama"].values[0]
-            # grab judul
-            judul = sel_data["Judul"].values[0]
-            # list kode dosen
-            lec_code_list = lec_code.kode.values.tolist()
-            # grab nama pembimbing 1
-            pbb1 = sel_data["Pembimbing 1"].values[0]
-            if pbb1 in lec_code_list:
-                pbb1 = lec_code[lec_code.kode == pbb1].nama.values[0]
-            # grab nama pembimbing 2
-            pbb2 = sel_data["Pembimbing 2"].values[0]
-            if pbb2 != 0:
-                if pbb2 in lec_code_list:
-                    pbb2 = lec_code[lec_code.kode == pbb2].nama.values[0]
+            # filter data
+            sel_data = schedule[schedule.NIM == nim]
+            # verifikasi password
+            passwd_ref = sel_data["Password"].values[0]
+            if passwd_user != passwd_ref:
+                # muncul pop up dengan tulisan “Password salah” dan halaman tidak berubah
+                return "pwd salah"
+            # grab nama
             else:
-                pbb2 = ""
-            # grab nama penguji 1
-            pgj1 = sel_data["Penguji 1"].values[0]
-            if pgj1 in lec_code_list:
-                pgj1 = lec_code[lec_code.kode == pgj1].nama.values[0]
-            # grab nama penguji 2
-            pgj2 = sel_data["Penguji 2"].values[0]
-            if pgj2 in lec_code_list:
-                pgj2 = lec_code[lec_code.kode == pgj2].nama.values[0]
-            # grab lokasi sidang
-            lokasi = sel_data["Lokasi"].values[0]
-            # kirim variable ke halaman selanjutnya
-            return [nim, nama, judul, pbb1, pbb2, pgj1, pgj2, lokasi]
+                nama = sel_data["Nama"].values[0]
+                # grab judul
+                judul = sel_data["Judul"].values[0]
+                # list kode dosen
+                lec_code_list = lec_code.kode.values.tolist()
+                # grab nama pembimbing 1
+                pbb1 = sel_data["Pembimbing 1"].values[0]
+                if pbb1 in lec_code_list:
+                    pbb1 = lec_code[lec_code.kode == pbb1].nama.values[0]
+                # grab nama pembimbing 2
+                pbb2 = sel_data["Pembimbing 2"].values[0]
+                if pbb2 != 0:
+                    if pbb2 in lec_code_list:
+                        pbb2 = lec_code[lec_code.kode == pbb2].nama.values[0]
+                else:
+                    pbb2 = ""
+                # grab nama penguji 1
+                pgj1 = sel_data["Penguji 1"].values[0]
+                if pgj1 in lec_code_list:
+                    pgj1 = lec_code[lec_code.kode == pgj1].nama.values[0]
+                # grab nama penguji 2
+                pgj2 = sel_data["Penguji 2"].values[0]
+                if pgj2 in lec_code_list:
+                    pgj2 = lec_code[lec_code.kode == pgj2].nama.values[0]
+                # grab lokasi sidang
+                lokasi = sel_data["Lokasi"].values[0]
+                # kirim variable ke halaman selanjutnya
+                return [nim, nama, judul, pbb1, pbb2, pgj1, pgj2, lokasi]
 
 
 ind_to_val = {"A":4, "AB":3.5, "B":3, "BC":2.5, "C":2, "D":1, "E":0}
