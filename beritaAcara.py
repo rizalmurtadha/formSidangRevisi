@@ -19,6 +19,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 path_data = os.path.join(APP_ROOT, 'data/')
 path_jadwal_sidang = "/".join([path_data,"jadwal_sidang"])
+path_output = "/".join([path_data,"output"])
 data_admin = "/".join([path_data,"login_admin.p"])
 data_recap = "/".join([path_data,"recap.p"])
 data_lecturer = "/".join([path_data,"lec_code.p"])
@@ -32,43 +33,86 @@ def home():
 
 @app.route("/login",methods=["GET", "POST"])
 def login():
-    if request.method=="POST":
-        try:
-            Login = request.form['Login']
-        except:
-            Login = "0"
-        if(Login=="1"):
-            login = joblib.load(data_admin)
-            login_list = login.username.values.tolist()
+    if "admin" in session:
+        return redirect(url_for("admin"))
+    else:
+        if request.method=="POST":
+            try:
+                Login = request.form['Login']
+            except:
+                Login = "0"
+            if(Login=="1"):
+                login = joblib.load(data_admin)
+                login_list = login.username.values.tolist()
 
-            # misal input username di-assign sebagai variable "username"
-            username = request.form['username']
-            # misal input password di-assign sebagai variable "password"
-            password = request.form['password']
+                # misal input username di-assign sebagai variable "username"
+                username = request.form['username']
+                # misal input password di-assign sebagai variable "password"
+                password = request.form['password']
 
-            if username not in login_list:
-                # tampilkan kalimat "Username tidak terdaftar"
-                return render_template("login.html",message="error")
-            else:
-                user_pwd = login[login.username == username].password[0]
-                if password != user_pwd:
-                    # tampilkan kalimat "Password salah"
-                    return render_template("login.html",message="pwdSalah")
+                if username not in login_list:
+                    # tampilkan kalimat "Username tidak terdaftar"
+                    return render_template("login.html",message="error")
                 else:
-                    # masuk ke halaman admin
-                    session["admin"] = username
-                    return redirect(url_for("admin"))
+                    user_pwd = login[login.username == username].password[0]
+                    if password != user_pwd:
+                        # tampilkan kalimat "Password salah"
+                        return render_template("login.html",message="pwdSalah")
+                    else:
+                        # masuk ke halaman admin
+                        session["admin"] = username
+                        return redirect(url_for("admin"))
 
-    return render_template("login.html")
+        return render_template("login.html")
 
 @app.route("/admin",methods=["GET", "POST"])
 def admin():
     if "admin" in session:
         admin = session["admin"]
+        if request.method=="POST":
+            if request.form['logout']=="1" :
+                session.pop('admin')
+                return redirect(url_for("home"))
         return render_template("admin.html")
     else:
         return redirect(url_for("login"))
     # return render_template("admin.html")
+
+@app.route("/admin/unduh",methods=["GET", "POST"])
+def unduh():
+    if "admin" in session:
+        admin = session["admin"]
+        if request.method=="POST":
+            # inputan tanggal awal 
+            awal = request.form['start']
+            awal = awal.replace("-"," ")
+            # inputan tanggal akhir
+            akhir = request.form['end']
+            akhir = akhir.replace("-"," ")
+            # memisahkan data tahun, bulan, tanggal
+            # urutan data : tahun, bulan, hari/tanggal 
+            awal=[int(s) for s in awal.split() if s.isdigit()] 
+            akhir=[int(s) for s in akhir.split() if s.isdigit()] 
+
+            # load recap
+            recap = joblib.load(data_recap)
+            begin = dtm.date(awal[0], awal[1], awal[2]) # input dari date picker kiri (from)
+            end = dtm.date(akhir[0], akhir[1], akhir[2]) # input dari date picker kanan (until)
+            # saya belum tahu output dari date picker seperti apa, asumsi saya masih bisa diubah ke format datetime
+            # filter
+            pick_recap = recap[(recap.Tanggal >= begin) & (recap.Tanggal <= end)]
+            pick_recap = pick_recap.iloc[:,1:]
+            # bikin folder baru "output" di dir "data"
+            filename = "Hasil-Sidang-{}-{}.xlsx".format(begin,end)
+            filename_path = "/".join([path_output,filename])
+            # path asli "./data/output/Hasil-Sidang-{}-{}.xlsx".format(begin,end)
+            pick_recap.to_excel(filename_path)
+            # selanjutnya file excel yang dihasilkan otomatis terdownload oleh user
+            return render_template("unduh.html",download="true", tipe="2",filename=filename)
+        return render_template("unduh.html")
+    else:
+        return redirect(url_for("login"))
+
 
 @app.route("/admin/unggah",methods=["GET", "POST"])
 def unggah():
@@ -116,20 +160,26 @@ def unggah():
                 add_schedule.to_excel(path_excel_pwd, index=None)
                 # save as pickle
                 joblib.dump(new_schedule, data_schedule)
-                path_jadwal = os.path.join(APP_ROOT, 'data/jadwal_sidang')
-                return render_template("unggah.html",download="true", filenames=excel_pwd_name)
-                return send_from_directory(path_jadwal,filename=excel_pwd_name, as_attachment=True)
+                # path_jadwal = os.path.join(APP_ROOT, 'data/jadwal_sidang')
+                return render_template("unggah.html",download="true", filenames=excel_pwd_name, tipe="1")
+                # return send_from_directory(path_jadwal,filename=excel_pwd_name, as_attachment=True)
                 # return render_template("unggah.html",download="true", filenames=excel_pwd_name)
                 # return path_excel_pwd
         return render_template("unggah.html")
     else:
         return redirect(url_for("login"))
 
-@app.route('/admin/unggah<string:filename>')
-def download_unggah(filename):
+@app.route('/admin/download<string:filename><string:tipe>')
+def download_data(filename,tipe):
     # filename = "Rekap-Sidang-TA.xlsx"
-    path_jadwal = os.path.join(APP_ROOT, 'data/jadwal_sidang')
-    return send_from_directory(path_jadwal,
+    if tipe == "1": 
+        # Tipe 1 = file hasil proses unggah ( file jadwal sidang )
+        path = path_jadwal_sidang
+    elif tipe == "2":
+        # Tipe 2 = file hasil proses Unduh ( file hasil sidang )
+        path = path_output
+    # path_jadwal = os.path.join(APP_ROOT, path)
+    return send_from_directory(path,
                                filename=filename, as_attachment=True)
 
 # function for generating password
@@ -148,7 +198,7 @@ def index():
     dead_rev = today + dtm.timedelta(days=15)
     today = "{:%d-%b-%Y}".format(today)
     dead_rev = "{:%d-%b-%Y}".format(dead_rev)
-    UTC = pytz.utc
+    # UTC = pytz.utc
     timeZ_Jkt = pytz.timezone('Asia/Jakarta')
     dt_Jkt = datetime.now(timeZ_Jkt)
     # print(dt_Jkt.strftime(' %H:%M:%S %Z %z'))
@@ -276,6 +326,9 @@ def index():
                     response = make_response(pdf)
                     response.headers["Content-Type"] = "application/pdf"
                     response.headers["Content-Disposition"] = headers_filename
+                    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+                    response.headers["Pragma"] = "no-cache"
+                    response.headers["Expires"] = "0"
                     return response
                 else:
                     return html
@@ -302,7 +355,7 @@ def cariMhs(nim,passwd_user):
     # condition 2
     else:
         # cek sudah pernah di inputkan atau belum
-        if nim in recap_nim:
+        if str(nim) in recap_nim:
         # muncul pop up dengan tulisan “Nilai sidang TA Mahasiswa sudah dimasukkan ke database” dan halaman tidak berubah
             return "data sudah ada"
         else:

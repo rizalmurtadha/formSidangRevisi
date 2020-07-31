@@ -2,7 +2,7 @@
 {% block title %}Unggah Dokumen{% endblock %}
 {% block content %}
     <br><br><br>
-    <div class="container d-flex justify-content-center" id="form-home">
+    <div class="container d-flex justify-content-center" id="form-home" style="min-height: 400px;">
         <form action="{{ url_for('unggah') }}" id="unggah" name="unggah" method="POST" enctype=multipart/form-data style="width: 40%;">
             <p>Unggah Dokumen</p>
             <div class="row">
@@ -13,7 +13,7 @@
                     </div>
                 </div>
                 <div class="col-3">
-                    <button onclick="myFunction()" class="btn btn-outline-primary btn-md" id="unggah" name="unggah" value="1">Unggah</button>
+                    <button class="btn btn-outline-primary btn-md" id="unggah" name="unggah" value="1">Unggah</button>
                 </div>
             </div>
             <div class="container" style="min-height: 40px;">
@@ -24,20 +24,25 @@
             </div>
             <p>Pastikan format file yang digunakan sesuai dengan template</p>
             <a href="{{ url_for('download_files',filename='schedule_template.xlsx') }}" class="btn btn-primary">Unduh template</a>
+            <br><br>
+            {% if download=="true" :%}
+            <h3 style="color: #23D7FF; text-align: center;"><b>Berhasil mengunggah dokumen</b></h3>
+            {% endif %}
         </form>
+    </div>
+    <div class="container">
+        <a href="{{ url_for('admin') }}" class="btn btn-primary">Kembali</a>
     </div>
     {% if download=="true" :%}
     <script>
-        // setTimeout(function(){
-        //     document.location = "{{ url_for('download_unggah',filename='')}}{{filenames}}";
-        // }, 500)
+        
 
         setTimeout(function(){
-            document.location = "{{ url_for('download_unggah',filename='')}}{{filenames}}";
-            setTimeout(function(){
-                document.location = "{{ url_for('home') }}";
-            },2000)
-        },500)
+            document.location = "{{ url_for('download_data',filename='',tipe='')}}{{filenames}}{{tipe}}";
+            // setTimeout(function(){
+            //     document.location = "{{ url_for('home') }}";
+            // },2000)
+        },100)
     </script>
 
     {% endif %}

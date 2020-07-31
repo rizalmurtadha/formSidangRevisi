@@ -1,10 +1,16 @@
 {% extends "base.html" %}
 {% block title %}Admin{% endblock %}
 {% block content %}
-    <br><br><br><br><br>
-    <div class="container d-flex justify-content-center">
+    <div class="container d-flex justify-content-end">
+        <form action="{{ url_for('admin') }}" id="unggah" name="unggah" method="POST" enctype=multipart/form-data >
+        <button type="submit" class="btn btn-link" name="logout" value="1">Logout</button>
+        </form>
+    </div>
+    <br><br><br><br>
+    <div class="container d-flex justify-content-center ">
         <a href="{{ url_for('unggah') }}" class="btn btn-primary">Unggah Dokumen</a>
         &nbsp; &nbsp; &nbsp; &nbsp; 
-        <a href="{{ url_for('download_files', filename='Rekap-Sidang-TA.xlsx') }}" class="btn btn-primary">Unduh Dokumen</a>
+        <a href="{{ url_for('unduh') }}" class="btn btn-primary">Unduh Dokumen</a>
+        <!-- <a href="{{ url_for('download_files', filename='Rekap-Sidang-TA.xlsx') }}" class="btn btn-primary">Unduh Dokumen</a> -->
     </div>
 {% endblock %}
