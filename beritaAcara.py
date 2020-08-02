@@ -42,7 +42,7 @@ def home():
         try:
             cari = request.form['cari']
             # if (cari=="0"):
-            #     # button skip 
+            #     # button skip
             #     return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time)
             # else:
             nim=request.form['NIM']
@@ -70,7 +70,7 @@ def home():
                 session["dataMhs4"] = dataMhs[4]
                 session["dataMhs5"] = dataMhs[5]
                 session["dataMhs6"] = dataMhs[6]
-                session["dataMhs7"] = dataMhs[7] 
+                session["dataMhs7"] = dataMhs[7]
                 return redirect(url_for("index"))
                 # return render_template("index.html", NIM=dataMhs[0], MHS=dataMhs[1],
                 #                         JTA=dataMhs[2], pbb1=dataMhs[3], pbb2=dataMhs[4],
@@ -138,16 +138,16 @@ def unduh():
     if "admin" in session:
         admin = session["admin"]
         if request.method=="POST":
-            # inputan tanggal awal 
+            # inputan tanggal awal
             awal = request.form['start']
             awal = awal.replace("-"," ")
             # inputan tanggal akhir
             akhir = request.form['end']
             akhir = akhir.replace("-"," ")
             # memisahkan data tahun, bulan, tanggal
-            # urutan data : tahun, bulan, hari/tanggal 
-            awal=[int(s) for s in awal.split() if s.isdigit()] 
-            akhir=[int(s) for s in akhir.split() if s.isdigit()] 
+            # urutan data : tahun, bulan, hari/tanggal
+            awal=[int(s) for s in awal.split() if s.isdigit()]
+            akhir=[int(s) for s in akhir.split() if s.isdigit()]
 
             # load recap
             recap = joblib.load(data_recap)
@@ -161,7 +161,7 @@ def unduh():
             filename = "Hasil-Sidang-{}-{}.xlsx".format(begin,end)
             filename_path = "/".join([path_output,filename])
             # path asli "./data/output/Hasil-Sidang-{}-{}.xlsx".format(begin,end)
-            pick_recap.to_excel(filename_path)
+            pick_recap.to_excel(filename_path, index=None)
             # selanjutnya file excel yang dihasilkan otomatis terdownload oleh user
             return render_template("unduh.html",download="true", tipe="2",filename=filename)
         return render_template("unduh.html")
@@ -188,7 +188,7 @@ def unggah():
             # return str(col_name[5])
             # return str(len(col_name))
             col_name_ref =['No.', 'Nama', 'NIM', 'E-mail', 'KK', 'Pembimbing 1',
-                        'Pembimbing 2', 'Penguji 1', 'Penguji 2','Judul', 
+                        'Pembimbing 2', 'Penguji 1', 'Penguji 2','Judul',
                         'Waktu', 'Pukul', 'Keterangan', 'Lokasi']
             # verify uploaded file is suitable
             if col_name != col_name_ref:
@@ -227,7 +227,7 @@ def unggah():
 @app.route('/admin/download<string:filename><string:tipe>')
 def download_data(filename,tipe):
     # filename = "Rekap-Sidang-TA.xlsx"
-    if tipe == "1": 
+    if tipe == "1":
         # Tipe 1 = file hasil proses unggah ( file jadwal sidang )
         path = path_jadwal_sidang
     elif tipe == "2":
@@ -374,7 +374,7 @@ def index():
                     css = ["static/css/bootstrap.min.css","static/style.css"]
                     # uncomment config yang dipilih
                     # config for heroku
-                    config = pdfkit.configuration(wkhtmltopdf='./bin/wkhtmltopdf')
+                    config = pdfkit.configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf')
                     pdf = pdfkit.from_string(html, False,configuration=config, css=css)
                     # config for local pc
                     # pdf = pdfkit.from_string(html, False, css=css)
@@ -391,7 +391,7 @@ def index():
             except:
                 cetak="0"
                 return render_template("index.html", cetak=cetak, message="error",date=today,dead_rev=dead_rev, current_time=current_time,editable=editable)
-    
+
     if "dataMhs0" in session:
         editable="0"
         return render_template("index.html", NIM=session['dataMhs0'], MHS=session['dataMhs1'],
