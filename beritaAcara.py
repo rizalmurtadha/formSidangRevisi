@@ -374,7 +374,7 @@ def index():
                     css = ["static/css/bootstrap.min.css","static/style.css"]
                     # uncomment config yang dipilih
                     # config for heroku
-                    config = pdfkit.configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf')
+                    config = pdfkit.configuration(wkhtmltopdf='./bin/wkhtmltopdf')
                     pdf = pdfkit.from_string(html, False,configuration=config, css=css)
                     # config for local pc
                     # pdf = pdfkit.from_string(html, False, css=css)
