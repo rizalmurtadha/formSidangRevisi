@@ -20,22 +20,23 @@
                 {% if(message=="tidak sesuai"): %}
                     <p class="alert_" style="text-align: left;">Format file yang diunggah tidak sesuai dengan template</p>
                 {% endif %}
-                
+
             </div>
             <p>Pastikan format file yang digunakan sesuai dengan template</p>
             <a href="{{ url_for('download_files',filename='schedule_template.xlsx') }}" class="btn btn-primary">Unduh template</a>
             <br><br>
             {% if download=="true" :%}
-            <h3 style="color: #23D7FF; text-align: center;"><b>Berhasil mengunggah dokumen</b></h3>
+            <h4 style="color: #0000FF; text-align: center;">Proses mengunggah dokumen berhasil</h4>
             {% endif %}
         </form>
     </div>
     <div class="container">
         <a href="{{ url_for('admin') }}" class="btn btn-primary">Kembali</a>
     </div>
+    <br><br><br><br>
     {% if download=="true" :%}
     <script>
-        
+
 
         setTimeout(function(){
             document.location = "{{ url_for('download_data',filename='',tipe='')}}{{filenames}}{{tipe}}";
