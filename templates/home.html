@@ -5,9 +5,14 @@
         <a href="{{ url_for('login') }}" class="btn btn-link">Admin</a>
     </div>
     
-    <br><br><br>
+    <!-- <br><br><br> -->
+    <div class="container" style="min-height: 75px;">
+        {% if submit=="true" :%}
+        <h3 style="color: #23D7FF; text-align: center;"><b>Berhasil Submit Nilai</b></h3>
+        {% endif %}
+    </div>
     <div class="container d-flex justify-content-center" id="form-home">
-        <form action="{{ url_for('index') }}" id="my-form" method="POST" enctype=multipart/form-data>
+        <form action="{{ url_for('home') }}" id="my-form" method="POST" enctype=multipart/form-data>
             <h5>Silahkan isi NIM Mahasiswa dan Password</h5>
             <div class="form-group row">
                 <label for="NIM" class="col-4 col-form-label">NIM</label>

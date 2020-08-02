@@ -510,7 +510,7 @@
                                         Apakah semua data sudah benar?
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="submit" class="btn btn-outline-primary btn-lg" id="cetak" name="cetak" value="1" >Ya</button>
+                                            <button type="submit" onclick="back()" class="btn btn-outline-primary btn-lg" id="cetak" name="cetak" value="1" >Ya</button>
                                             <button type="button" class="btn btn-outline-primary btn-lg" data-dismiss="modal">Tidak</button>
                                             <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
                                         </div>
@@ -723,6 +723,15 @@
 
             document.getElementById('KL').value = '{{ KL }}';
             document.getElementById('IA').value = '{{ IA }}';
+            
+        }
+        function back() {
+            document.getElementById("my-form").submit();
+            setTimeout(function(){
+                // alert('Form has been submitted');
+                // document.location = "{{ url_for('home') }}";
+                document.location = "{{ url_for('clearSession') }}";
+            },1000)
         }
         
     </script>

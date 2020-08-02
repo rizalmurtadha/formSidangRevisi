@@ -26,10 +26,65 @@ data_lecturer = "/".join([path_data,"lec_code.p"])
 data_schedule = "/".join([path_data,"schedule.p"])
 data_rekap_xlsx = "/".join([path_data,"Rekap-Sidang-TA.xlsx"])
 
+# today = date.today()
+# dead_rev = today + dtm.timedelta(days=15)
+# today = "{:%d-%b-%Y}".format(today)
+# dead_rev = "{:%d-%b-%Y}".format(dead_rev)
+# # UTC = pytz.utc
+# timeZ_Jkt = pytz.timezone('Asia/Jakarta')
+# dt_Jkt = datetime.now(timeZ_Jkt)
+# # print(dt_Jkt.strftime(' %H:%M:%S %Z %z'))
+# current_time = dt_Jkt.strftime('%H:%M')
 
 @app.route("/",methods=["GET", "POST"])
 def home():
-    return render_template("home.html")
+    if request.method=="POST":
+        try:
+            cari = request.form['cari']
+            # if (cari=="0"):
+            #     # button skip 
+            #     return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time)
+            # else:
+            nim=request.form['NIM']
+            if(nim==""):
+                # return redirect(url_for("home"))
+                return render_template("home.html",message="tidak ada")
+            passwd_user = request.form["password"]
+            try:
+                nim = int(nim)
+            except:
+                return render_template("home.html",message="tidak ada")
+            dataMhs = cariMhs(nim,passwd_user)
+            if (dataMhs=="tidak ada"):
+                return render_template("home.html",message=dataMhs)
+            elif (dataMhs=="pwd salah"):
+                return render_template("home.html",message=dataMhs)
+            elif (dataMhs=="data sudah ada"):
+                return render_template("home.html",message=dataMhs)
+            else:
+                editable="0"
+                session["dataMhs0"] = str(dataMhs[0])
+                session["dataMhs1"] = dataMhs[1]
+                session["dataMhs2"] = dataMhs[2]
+                session["dataMhs3"] = dataMhs[3]
+                session["dataMhs4"] = dataMhs[4]
+                session["dataMhs5"] = dataMhs[5]
+                session["dataMhs6"] = dataMhs[6]
+                session["dataMhs7"] = dataMhs[7] 
+                return redirect(url_for("index"))
+                # return render_template("index.html", NIM=dataMhs[0], MHS=dataMhs[1],
+                #                         JTA=dataMhs[2], pbb1=dataMhs[3], pbb2=dataMhs[4],
+                #                         pgj1=dataMhs[5], pgj2=dataMhs[6], ruangan=dataMhs[7],
+                #                         cetak=cetak, message="normal",date=today,
+                #                         dead_rev=dead_rev, current_time=current_time,editable=editable)
+        except:
+            cari = None
+    try:
+        submit = session['submit']
+        session.pop('submit',None)
+    except:
+        submit = "false"
+    return render_template("home.html",submit=submit)
 
 @app.route("/login",methods=["GET", "POST"])
 def login():
@@ -206,37 +261,37 @@ def index():
     cetak = "0"
     editable = "1"
     if request.method=="POST":
-        try:
-            cari = request.form['cari']
-            if (cari=="0"):
-                return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time)
-            else:
-                nim=request.form['NIM']
-                if(nim==""):
-                    # return redirect(url_for("home"))
-                    return render_template("home.html",message="tidak ada")
-                passwd_user = request.form["password"]
-                try:
-                    nim = int(nim)
-                except:
-                    return render_template("home.html",message="tidak ada")
-                dataMhs = cariMhs(nim,passwd_user)
-                if (dataMhs=="tidak ada"):
-                    return render_template("home.html",message=dataMhs)
-                elif (dataMhs=="pwd salah"):
-                    return render_template("home.html",message=dataMhs)
-                elif (dataMhs=="data sudah ada"):
-                    return render_template("home.html",message=dataMhs)
-                else:
-                    editable="0"
-                    session["user"] = nim
-                    return render_template("index.html", NIM=dataMhs[0], MHS=dataMhs[1],
-                                            JTA=dataMhs[2], pbb1=dataMhs[3], pbb2=dataMhs[4],
-                                            pgj1=dataMhs[5], pgj2=dataMhs[6], ruangan=dataMhs[7],
-                                            cetak=cetak, message="normal",date=today,
-                                            dead_rev=dead_rev, current_time=current_time,editable=editable)
-        except:
-            cari = None
+        # try:
+        #     cari = request.form['cari']
+        #     if (cari=="0"):
+        #         return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time)
+        #     else:
+        #         nim=request.form['NIM']
+        #         if(nim==""):
+        #             # return redirect(url_for("home"))
+        #             return render_template("home.html",message="tidak ada")
+        #         passwd_user = request.form["password"]
+        #         try:
+        #             nim = int(nim)
+        #         except:
+        #             return render_template("home.html",message="tidak ada")
+        #         dataMhs = cariMhs(nim,passwd_user)
+        #         if (dataMhs=="tidak ada"):
+        #             return render_template("home.html",message=dataMhs)
+        #         elif (dataMhs=="pwd salah"):
+        #             return render_template("home.html",message=dataMhs)
+        #         elif (dataMhs=="data sudah ada"):
+        #             return render_template("home.html",message=dataMhs)
+        #         else:
+        #             editable="0"
+        #             session["user"] = nim
+        #             return render_template("index.html", NIM=dataMhs[0], MHS=dataMhs[1],
+        #                                     JTA=dataMhs[2], pbb1=dataMhs[3], pbb2=dataMhs[4],
+        #                                     pgj1=dataMhs[5], pgj2=dataMhs[6], ruangan=dataMhs[7],
+        #                                     cetak=cetak, message="normal",date=today,
+        #                                     dead_rev=dead_rev, current_time=current_time,editable=editable)
+        # except:
+        #     cari = None
 
         try:
             hitung = request.form['hitung']
@@ -329,14 +384,43 @@ def index():
                     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
                     response.headers["Pragma"] = "no-cache"
                     response.headers["Expires"] = "0"
+                    response.headers['Cache-Control'] = 'public, max-age=0'
                     return response
                 else:
                     return html
             except:
                 cetak="0"
                 return render_template("index.html", cetak=cetak, message="error",date=today,dead_rev=dead_rev, current_time=current_time,editable=editable)
-    return redirect(url_for("home"))
-    return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time,editable=editable)
+    
+    if "dataMhs0" in session:
+        editable="0"
+        return render_template("index.html", NIM=session['dataMhs0'], MHS=session['dataMhs1'],
+                                            JTA=session['dataMhs2'], pbb1=session['dataMhs3'], pbb2=session['dataMhs4'],
+                                            pgj1=session['dataMhs5'], pgj2=session['dataMhs6'], ruangan=session['dataMhs7'],
+                                            cetak=cetak, message="normal",date=today,
+                                            dead_rev=dead_rev, current_time=current_time,editable=editable)
+    else:
+        return redirect(url_for("home"))
+        return render_template("index.html",  cetak=cetak, message="normal",date=today,dead_rev=dead_rev, current_time=current_time,editable=editable)
+
+@app.route("/clear")
+def clearSession():
+    session.pop('dataMhs0',None)
+    session.pop('dataMhs1',None)
+    session.pop('dataMhs2',None)
+    session.pop('dataMhs3',None)
+    session.pop('dataMhs4',None)
+    session.pop('dataMhs5',None)
+    session.pop('dataMhs6',None)
+    session.pop('dataMhs7',None)
+    session['submit']='true'
+    return redirect(url_for('home'))
+
+# cuma buat ngetest data session
+@app.route("/test")
+def test():
+    # return str(session['dataMhs0'])
+    return str(session['dataMhs2'])
 
 def cariMhs(nim,passwd_user):
     # [lec_code, schedule] = joblib.load(data_mahasiswa)
