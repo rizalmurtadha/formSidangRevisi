@@ -670,8 +670,9 @@
             <p>(Maksimal revisi hingga 15 (lima belas) hari kalender. Jika lebih dari 15 (lima belas) hari maka indeks nilai TA turun menjadi satu tingkat dari nilai indeks hasil keputusan sidang TA. Jika lebih dari 30 (tiga puluh) hari maka sidang ulang)</p>
             <br>
             <h5><b>Catatan Revisi:</b></h5>
-            <textarea id="RVS" name="RVS" rows="13" style="width:100%;">{{RVS}}</textarea>
-            <br><br><br><br><br>
+            <textarea id="RVS" name="RVS" rows="20" style="width:100%;">{{RVS}}</textarea>
+            <!-- <br><br><br><br><br> -->
+            <br><br>
             <table style="width: 100%;" id="Table-border">
                 <tr>
                     <th><h5><b>Menyetujui untuk direvisi</b></h5></th>
@@ -731,7 +732,7 @@
                 // alert('Form has been submitted');
                 // document.location = "{{ url_for('home') }}";
                 document.location = "{{ url_for('clearSession') }}";
-            },1500)
+            },2500)
         }
         
     </script>
