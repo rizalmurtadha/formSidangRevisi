@@ -21,19 +21,20 @@
                     <input type="date" id="end" name="end" required>
                     <!-- <input id="datepicker2" name="end" /> -->
                 </div>
-            </div>            
+            </div>
             <br>
             <button class="btn btn-primary btn-md" id="unduh" name="unduh" value="1">Unduh dokumen</button>
             <!-- <a href="{{ url_for('download_files',filename='schedule_template.xlsx') }}" class="btn btn-primary">Unduh dokumen</a> -->
             <br><br>
             {% if download=="true" :%}
-            <h3 style="color: #23D7FF; text-align: center;"><b>Berhasil mengunduh dokumen</b></h3>
+            <h4 style="color: #0000FF; text-align: center;">Proses mengunduh dokumen berhasil</h4>
             {% endif %}
         </form>
     </div>
     <div class="container">
         <a href="{{ url_for('admin') }}" class="btn btn-primary">Kembali</a>
     </div>
+    <br><br><br>
     {% if download=="true" :%}
     <script>
 
@@ -58,6 +59,6 @@
         // $('#datepicker2').datepicker({
         //     uiLibrary: 'bootstrap4'
         // });
-        
+
     </script>
 {% endblock %}
