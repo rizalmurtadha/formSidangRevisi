@@ -71,7 +71,6 @@ def home():
                 session["dataMhs5"] = dataMhs[5]
                 session["dataMhs6"] = dataMhs[6]
                 session["dataMhs7"] = dataMhs[7]
-
                 return redirect(url_for("index"))
                 # return render_template("index.html", NIM=dataMhs[0], MHS=dataMhs[1],
                 #                         JTA=dataMhs[2], pbb1=dataMhs[3], pbb2=dataMhs[4],
@@ -156,7 +155,7 @@ def unduh():
             end = dtm.date(akhir[0], akhir[1], akhir[2]) # input dari date picker kanan (until)
             # saya belum tahu output dari date picker seperti apa, asumsi saya masih bisa diubah ke format datetime
             # filter
-            pick_recap = recap[(recap.Tanggal_Ref >= begin) & (recap.Tanggal_Ref <= end)]
+            pick_recap = recap[(recap.Tanggal >= begin) & (recap.Tanggal <= end)]
             pick_recap = pick_recap.iloc[:,1:]
             # bikin folder baru "output" di dir "data"
             filename = "Hasil-Sidang-{}-{}.xlsx".format(begin,end)
@@ -190,7 +189,7 @@ def unggah():
             # return str(len(col_name))
             col_name_ref =['No.', 'Nama', 'NIM', 'E-mail', 'KK', 'Pembimbing 1',
                         'Pembimbing 2', 'Penguji 1', 'Penguji 2','Judul',
-                        'Tanggal', 'Pukul', 'Skema sidang', 'Lokasi']
+                        'Waktu', 'Pukul', 'Keterangan', 'Lokasi']
             # verify uploaded file is suitable
             if col_name != col_name_ref:
             # tampilkan tulisan "Format file yang diunggah tidak sesuai dengan template"
@@ -365,9 +364,7 @@ def index():
                     # recap
                     recap = joblib.load(data_recap)
                     new_today = dtm.datetime.strptime(today, '%d-%b-%Y')
-                    recap = recap.append({"Tanggal_Ref": new_today,"Nama": MHS, "NIM": NIM, "Judul": JTA, "Nilai": INA,
-                    "Indeks": LIA, "Status": KL, "Tanggal": today, "Waktu": current_time,
-                    "Pembimbing 1": pbb1, "Pembimbing 2": pbb2, "Penguji 1": pgj1, "Penguji 2": pgj2}, ignore_index=True)
+                    recap = recap.append({"Tanggal": new_today, "NIM":NIM, "Nama":MHS, "Judul":JTA, "Indeks":LIA}, ignore_index=True)
                     joblib.dump(recap, data_recap)
                     # recap.to_excel(data_rekap_xlsx, index=None)
 
@@ -377,7 +374,6 @@ def index():
                     css = ["static/css/bootstrap.min.css","static/style.css"]
                     # uncomment config yang dipilih
                     # config for heroku
-                    # config = pdfkit.configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf')
                     config = pdfkit.configuration(wkhtmltopdf='./bin/wkhtmltopdf')
                     pdf = pdfkit.from_string(html, False,configuration=config, css=css)
                     # config for local pc
@@ -398,15 +394,10 @@ def index():
 
     if "dataMhs0" in session:
         editable="0"
-        lec_code = joblib.load(data_lecturer)
-        lec_code.fillna(0, inplace=True)
-        lec_name_list = lec_code.Nama.values.tolist()
-        lec_name_list.remove(0)
-        print(lec_name_list)
         return render_template("index.html", NIM=session['dataMhs0'], MHS=session['dataMhs1'],
                                             JTA=session['dataMhs2'], pbb1=session['dataMhs3'], pbb2=session['dataMhs4'],
                                             pgj1=session['dataMhs5'], pgj2=session['dataMhs6'], ruangan=session['dataMhs7'],
-                                            cetak=cetak, message="normal",date=today, lec_name_list=lec_name_list,
+                                            cetak=cetak, message="normal",date=today,
                                             dead_rev=dead_rev, current_time=current_time,editable=editable)
     else:
         return redirect(url_for("home"))
@@ -438,7 +429,7 @@ def cariMhs(nim,passwd_user):
     recap = joblib.load(data_recap)
     nim_list = schedule.NIM.values.tolist()
     recap_nim = recap.NIM.values.tolist()
-    # print(nim in nim_list)
+    print(nim in nim_list)
 
     # misal value NIM yang diisikan di-assign sebagai “nim”
     # condition 1
@@ -465,28 +456,26 @@ def cariMhs(nim,passwd_user):
                 # grab judul
                 judul = sel_data["Judul"].values[0]
                 # list kode dosen
-                lec_code_list = lec_code.Kode.values.tolist()
-                lec_name_list = lec_code.Nama.values.tolist()
-                # lec_name_list.remove("nan")
+                lec_code_list = lec_code.kode.values.tolist()
                 # grab nama pembimbing 1
                 pbb1 = sel_data["Pembimbing 1"].values[0]
                 if pbb1 in lec_code_list:
-                    pbb1 = lec_code[lec_code.Kode == pbb1].Nama.values[0]
+                    pbb1 = lec_code[lec_code.kode == pbb1].nama.values[0]
                 # grab nama pembimbing 2
                 pbb2 = sel_data["Pembimbing 2"].values[0]
                 if pbb2 != 0:
                     if pbb2 in lec_code_list:
-                        pbb2 = lec_code[lec_code.Kode == pbb2].Nama.values[0]
+                        pbb2 = lec_code[lec_code.kode == pbb2].nama.values[0]
                 else:
                     pbb2 = ""
                 # grab nama penguji 1
                 pgj1 = sel_data["Penguji 1"].values[0]
                 if pgj1 in lec_code_list:
-                    pgj1 = lec_code[lec_code.Kode == pgj1].Nama.values[0]
+                    pgj1 = lec_code[lec_code.kode == pgj1].nama.values[0]
                 # grab nama penguji 2
                 pgj2 = sel_data["Penguji 2"].values[0]
                 if pgj2 in lec_code_list:
-                    pgj2 = lec_code[lec_code.Kode == pgj2].Nama.values[0]
+                    pgj2 = lec_code[lec_code.kode == pgj2].nama.values[0]
                 # grab lokasi sidang
                 lokasi = sel_data["Lokasi"].values[0]
                 # kirim variable ke halaman selanjutnya
