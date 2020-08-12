@@ -419,7 +419,7 @@ def clearSession():
 # cuma buat ngetest data session
 @app.route("/test112341")
 def test():
-    return datetime.now()
+    return str(datetime.now())
     # return str(session['dataMhs0'])
     # return str(session['dataMhs2'])
 
