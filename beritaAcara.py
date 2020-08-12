@@ -417,10 +417,11 @@ def clearSession():
     return redirect(url_for('home'))
 
 # cuma buat ngetest data session
-@app.route("/test")
+@app.route("/test112341")
 def test():
+    return datetime.now()
     # return str(session['dataMhs0'])
-    return str(session['dataMhs2'])
+    # return str(session['dataMhs2'])
 
 def cariMhs(nim,passwd_user):
     # [lec_code, schedule] = joblib.load(data_mahasiswa)
