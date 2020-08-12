@@ -419,7 +419,10 @@ def clearSession():
 # cuma buat ngetest data session
 @app.route("/test112341")
 def test():
-    return str(datetime.now())
+    timeZ_Jkt = pytz.timezone('Asia/Jakarta')
+    dt_Jkt = datetime.now(timeZ_Jkt)
+    current_date = dt_Jkt.strftime('%d-%b-%Y')
+    return str(current_date)
     # return str(session['dataMhs0'])
     # return str(session['dataMhs2'])
 
